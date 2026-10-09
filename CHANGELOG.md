@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 — 2026-10-09
+
+- Republishes 0.1.0 with no code changes so the package is published by the Narwhal API Team account.
+
 ## 0.1.0 — 2026-10-09
 
 - Initial typed client, exact decimal strings, response metadata, retries and pagination.

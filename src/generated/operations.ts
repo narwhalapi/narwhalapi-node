@@ -1,5 +1,5 @@
-// Generated from spec/live/openapi.json sha256 b60f17d48a2e406d95b34c274a80961d2a3de2b5e7b056a082d0ded894340420. Do not edit.
-// Generated from spec/next/openapi.json sha256 b60f17d48a2e406d95b34c274a80961d2a3de2b5e7b056a082d0ded894340420. Do not edit.
+// Generated from spec/live/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
+// Generated from spec/next/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
 import type { Decimal } from "../decode.js";
 import { iterate, unknownPage } from "../pagination.js";
 import {
@@ -26,7 +26,7 @@ import type {
   WebhookFamily,
 } from "./models.js";
 export const LIVE_SPEC_SHA =
-  "b60f17d48a2e406d95b34c274a80961d2a3de2b5e7b056a082d0ded894340420";
+  "549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c";
 export interface CalendarSubscriptionsCreateOptions extends RequestOptions {
   countries: Array<string>;
   end_date: string;
@@ -1772,6 +1772,7 @@ export class Economics {
     addQuery(query, "end_date", options.end_date, "single", false, false);
     addQuery(query, "limit", options.limit, "single", false, false);
     addQuery(query, "start_date", options.start_date, "single", false, false);
+    query.append("view", "full");
     return this.#transport.request(
       "GET",
       encodePath("/v1/economics/calendar", {}),

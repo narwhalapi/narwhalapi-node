@@ -1,5 +1,5 @@
-// Generated from spec/live/openapi.json sha256 b60f17d48a2e406d95b34c274a80961d2a3de2b5e7b056a082d0ded894340420. Do not edit.
-// Generated from spec/next/openapi.json sha256 b60f17d48a2e406d95b34c274a80961d2a3de2b5e7b056a082d0ded894340420. Do not edit.
+// Generated from spec/live/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
+// Generated from spec/next/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
 import type { Decimal } from "../decode.js";
 import type { ResponseMeta } from "../meta.js";
 export type Annualization = "annualized" | "not_annualized" | (string & {});
@@ -175,10 +175,52 @@ export type QuoteFreshness =
   | "stale"
   | (string & {});
 export type QuoteRole = "blended" | "excluded" | (string & {});
+export type ReleaseStage =
+  | "advance"
+  | "final"
+  | "first"
+  | "flash"
+  | "preliminary"
+  | "second"
+  | "third"
+  | (string & {});
 export type ReleaseStatus =
   | "cancelled"
   | "published"
   | "scheduled"
+  | (string & {});
+export type ReleaseTopic =
+  | "balance_of_payments"
+  | "business_confidence"
+  | "construction"
+  | "consumer_confidence"
+  | "consumer_prices"
+  | "employment"
+  | "energy"
+  | "gdp"
+  | "home_sales"
+  | "house_prices"
+  | "household_spending"
+  | "housing_construction"
+  | "import_export_prices"
+  | "industrial_production"
+  | "investment"
+  | "jobless_claims"
+  | "labour_force"
+  | "manufacturing"
+  | "merchandise_trade"
+  | "money_credit"
+  | "other"
+  | "policy_communication"
+  | "policy_minutes"
+  | "policy_rate"
+  | "producer_prices"
+  | "public_finance"
+  | "retail_sales"
+  | "services"
+  | "tourism"
+  | "wages"
+  | "wholesale_trade"
   | (string & {});
 export type ResolutionKind =
   | "occurrence"
@@ -436,6 +478,8 @@ export interface EconomicRelease {
   country: string;
   family: EconomicFamily;
   indicators?: Array<EconomicReleaseIndicator>;
+  /** Narwhal's standard English name for the release series, from one closed list. */
+  name: string;
   notice?: string;
   observed_at?: string;
   officially_published_at?: string;
@@ -443,8 +487,15 @@ export interface EconomicRelease {
   release_id: string;
   revision?: number;
   schedule: EconomicReleaseSchedule;
+  /** Narwhal's permanent ID for the release series, shared by every edition; null for a series not yet classified. */
+  series_id?: string;
+  /** Which edition of the period's figures this release is. */
+  stage?: ReleaseStage;
   status: ReleaseStatus;
+  /** The publisher's own title, in its own language. */
   title: string;
+  /** What the series measures, the same across countries; null when not yet classified. New topics may be added. */
+  topic?: ReleaseTopic;
   variant?: string;
   version: string;
   readonly meta: ResponseMeta;
@@ -476,6 +527,8 @@ export interface EconomicReleaseIndicator {
 export interface EconomicReleaseSchedule {
   at?: string;
   date?: string;
+  /** The release day in the publisher's own time zone; an exact time in UTC can fall on the day before or after. */
+  local_date?: string;
   precision: SchedulePrecision;
   /** How an exact time is known: the publisher's dated calendar entry, or the publisher's documented standard release time applied to a date-only entry. */
   time_basis?: ScheduleTimeBasis;

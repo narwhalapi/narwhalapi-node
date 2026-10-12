@@ -22,6 +22,7 @@ export const PALMOIL_SERIES_NOT_FOUND = "palmoil_series_not_found";
 export const PHYSICAL_SERIES_AMBIGUOUS = "physical_series_ambiguous";
 export const PHYSICAL_PRICE_UNAVAILABLE = "physical_price_unavailable";
 export const CALENDAR_COVERAGE_UNAVAILABLE = "calendar_coverage_unavailable";
+export const CALENDAR_NOT_PUBLISHED = "calendar_not_published";
 export const PLAN_UPGRADE_REQUIRED = "plan_upgrade_required";
 export const SUBSCRIPTION_NOT_FOUND = "subscription_not_found";
 export const WEBHOOK_UNAVAILABLE = "webhook_unavailable";

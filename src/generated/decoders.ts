@@ -1,5 +1,5 @@
-// Generated from spec/live/openapi.json sha256 b60f17d48a2e406d95b34c274a80961d2a3de2b5e7b056a082d0ded894340420. Do not edit.
-// Generated from spec/next/openapi.json sha256 b60f17d48a2e406d95b34c274a80961d2a3de2b5e7b056a082d0ded894340420. Do not edit.
+// Generated from spec/live/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
+// Generated from spec/next/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
 import {
   optional,
   readArray,
@@ -313,6 +313,7 @@ export function decodeEconomicRelease(
       indicators: optional(data.indicators, (value: unknown) =>
         readArray(value).map((item) => decodeEconomicReleaseIndicator(item)),
       ),
+      name: readString(data.name),
       notice: optional(data.notice, readString),
       observed_at: optional(data.observed_at, readString),
       officially_published_at: optional(
@@ -323,8 +324,11 @@ export function decodeEconomicRelease(
       release_id: readString(data.release_id),
       revision: optional(data.revision, readInt),
       schedule: decodeEconomicReleaseSchedule(data.schedule),
+      series_id: optional(data.series_id, readString),
+      stage: optional(data.stage, readString),
       status: readString(data.status),
       title: readString(data.title),
+      topic: optional(data.topic, readString),
       variant: optional(data.variant, readString),
       version: readString(data.version),
     },
@@ -365,6 +369,7 @@ export function decodeEconomicReleaseSchedule(
   return {
     at: optional(data.at, readString),
     date: optional(data.date, readString),
+    local_date: optional(data.local_date, readString),
     precision: readString(data.precision),
     time_basis: optional(data.time_basis, readString),
     timezone: optional(data.timezone, readString),

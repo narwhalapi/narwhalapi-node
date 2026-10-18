@@ -1,6 +1,6 @@
 {
   "name": "narwhalapi",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Typed server-side client for the Narwhal API",
   "type": "module",
   "author": "Narwhal API Team <support@narwhalapi.com>",

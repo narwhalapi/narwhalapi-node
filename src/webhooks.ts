@@ -1,8 +1,8 @@
 /** Local webhook verification. Always verify the exact raw request bytes. */
 import { readJson } from "./decode.js";
 import { WebhookVerificationError } from "./errors.js";
-import { decodeDeliveryEvent } from "./generated/decoders.js";
-import type { DeliveryEvent } from "./generated/models.js";
+import { decodeWebhookEvent } from "./generated/decoders.js";
+import type { WebhookEvent } from "./generated/models.js";
 import { type HeaderInput, headerEntries } from "./meta.js";
 
 export interface WebhookOptions {
@@ -16,7 +16,7 @@ export async function verifyWebhook(
   headers: HeaderInput,
   secrets: string | readonly string[],
   options: WebhookOptions = {},
-): Promise<DeliveryEvent> {
+): Promise<WebhookEvent> {
   if (rawBody instanceof ArrayBuffer) rawBody = new Uint8Array(rawBody);
   if (!(rawBody instanceof Uint8Array))
     throw new TypeError(
@@ -87,7 +87,7 @@ export async function verifyWebhook(
   }
   if (!matched) throw new WebhookVerificationError("no_matching_signature");
   try {
-    return decodeDeliveryEvent(readJson(message.subarray(prefix.length)));
+    return decodeWebhookEvent(readJson(message.subarray(prefix.length)));
   } catch {
     throw new WebhookVerificationError("invalid_body");
   }

@@ -1,5 +1,5 @@
-// Generated from spec/live/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
-// Generated from spec/next/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
+// Generated from spec/live/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
+// Generated from spec/next/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
 import type { Decimal } from "../decode.js";
 import type { ResponseMeta } from "../meta.js";
 export type Annualization = "annualized" | "not_annualized" | (string & {});
@@ -165,6 +165,11 @@ export type PredictionShape =
   | "set"
   | "timing"
   | (string & {});
+export type PredictionWebhookStatus =
+  | "closed"
+  | "settled"
+  | "void"
+  | (string & {});
 export type ProducerArrangement =
   | "purchase_agreement"
   | "supported_scheme"
@@ -227,6 +232,24 @@ export type ResolutionKind =
   | "price_fix"
   | "price_window"
   | "release"
+  | (string & {});
+export type ResourceObservationStatus =
+  | "break_in_series"
+  | "break_in_series_and_definition_differs"
+  | "definition_differs"
+  | "estimated"
+  | "provisional"
+  | (string & {});
+export type ResourceUnit =
+  | "currency"
+  | "currency_per_hour"
+  | "currency_per_month"
+  | "currency_per_week"
+  | "currency_per_year"
+  | "index"
+  | "job"
+  | "percent"
+  | "person"
   | (string & {});
 export type SchedulePrecision =
   | "date"
@@ -293,6 +316,21 @@ export type WebhookDeliveryState =
   | "leased"
   | "pending"
   | "succeeded"
+  | (string & {});
+export type WebhookDisabledReason = "customer" | "plan_limit" | (string & {});
+export type WebhookEventType =
+  | "dataset.published"
+  | "dataset.revised"
+  | "holiday.calendar.revised"
+  | "prediction.event.closed"
+  | "prediction.event.settled"
+  | "release.cancelled"
+  | "release.rescheduled"
+  | "release.scheduled"
+  | "release.updated"
+  | "webhook.test"
+  | "yield_curve.published"
+  | "yield_curve.revised"
   | (string & {});
 export type WebhookFamily =
   | "activity"
@@ -973,6 +1011,8 @@ export interface PredictionHistory {
   end: string;
   event_id: string;
   interval: PredictionInterval;
+  /** Present when the window continues: pass it as cursor, with the same start, end and interval, for the next page. A page holds about 5,000 bars. */
+  next_cursor?: string;
   series: Array<PredictionSeries>;
   shape: PredictionShape;
   start: string;
@@ -1042,7 +1082,23 @@ export interface PredictionVenue {
   volume_24h_usd?: Decimal;
   weight?: string;
 }
+export interface PredictionWebhookEvent {
+  closes_at?: string;
+  event_id: string;
+  /** Calendar release, only when the public calendar serves it. */
+  release_id?: string;
+  resolves_at?: string;
+  settlements: Array<PredictionWebhookSettlement>;
+  shape: PredictionShape;
+  status: PredictionWebhookStatus;
+  topic_id: string;
+}
+export interface PredictionWebhookSettlement {
+  status: SettlementStatus;
+  venue: Venue;
+}
 export interface Problem {
+  /** Stable machine-readable error code. Documented values are listed in `x-narwhal-codes`; the list may grow, so treat an unknown code by its HTTP status. */
   code: string;
   detail: string;
   instance?: string;
@@ -1058,6 +1114,23 @@ export interface Quote {
   probability: string;
   role: QuoteRole;
   venue: Venue;
+}
+export interface ResourceHistory {
+  country: string;
+  currency?: string;
+  next_cursor?: string;
+  observations: Array<ResourceObservation>;
+  series_id: string;
+  /** Present only when a distributor, not the original publisher, supplies the data. */
+  source?: SeriesSource;
+  unit: ResourceUnit;
+  readonly meta: ResponseMeta;
+}
+export interface ResourceObservation {
+  period: string;
+  released_on?: string;
+  status?: ResourceObservationStatus;
+  value: Decimal;
 }
 export interface ScalarBody {
   outcomes: Array<ScalarOutcome>;
@@ -1252,6 +1325,8 @@ export interface WebhookDestinationCreated {
   countries: Array<string>;
   created_at: string;
   destination_id: string;
+  /** Why a destination is not enabled: `customer` (switched off by the account) or `plan_limit` (paused because the plan no longer includes it). Null when enabled. */
+  disabled_reason?: WebhookDisabledReason;
   enabled: boolean;
   families: Array<WebhookFamily>;
   secret: string;
@@ -1277,12 +1352,32 @@ export interface WebhookDestinationResponse {
   countries: Array<string>;
   created_at: string;
   destination_id: string;
+  /** Why a destination is not enabled: `customer` (switched off by the account) or `plan_limit` (paused because the plan no longer includes it). Null when enabled. */
+  disabled_reason?: WebhookDisabledReason;
   enabled: boolean;
   families: Array<WebhookFamily>;
   secret_version: number;
   updated_at: string;
   url: string;
   readonly meta: ResponseMeta;
+}
+export interface WebhookEvent {
+  country?: string;
+  cursor?: string;
+  event_id: string;
+  family?: WebhookFamily;
+  holiday_country?: string;
+  holiday_generation?: number;
+  holiday_year?: number;
+  is_test?: boolean;
+  prediction?: PredictionWebhookEvent;
+  publication_id?: string;
+  recorded_at: string;
+  release_id?: string;
+  resource_id?: string;
+  resource_version?: string;
+  schema_version: string;
+  type: WebhookEventType;
 }
 export interface WebhookHistoryResponse {
   history: Array<WebhookConfigurationHistory>;

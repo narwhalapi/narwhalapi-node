@@ -1,5 +1,5 @@
-// Generated from spec/live/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
-// Generated from spec/next/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
+// Generated from spec/live/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
+// Generated from spec/next/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
 import type { Decimal } from "../decode.js";
 import { iterate, unknownPage } from "../pagination.js";
 import {
@@ -26,7 +26,7 @@ import type {
   WebhookFamily,
 } from "./models.js";
 export const LIVE_SPEC_SHA =
-  "549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c";
+  "a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8";
 export interface CalendarSubscriptionsCreateOptions extends RequestOptions {
   countries: Array<string>;
   end_date: string;
@@ -834,6 +834,12 @@ export interface EconomicsListReleasesOptions extends RequestOptions {
   end_date?: string;
   limit?: number;
   start_date?: string;
+}
+export interface EconomicsReadSeriesObservationsOptions extends RequestOptions {
+  cursor?: string;
+  end?: string;
+  limit?: number;
+  start?: string;
 }
 export class Economics {
   #transport: Transport;
@@ -1806,6 +1812,66 @@ export class Economics {
       this.#transport.signal(options.signal),
     );
   }
+  /**
+   * Read Resource History
+   * Stability: stable.
+   * @param series_id Path parameter.
+   * @param options Query parameters, request fields and cancellation signal.
+   * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
+   * @param options.end Wire parameter.
+   * @param options.limit Wire parameter.
+   * @param options.start Wire parameter.
+   * @returns Decoded response with header metadata.
+   */
+  async readSeriesObservations(
+    series_id: string,
+    options: EconomicsReadSeriesObservationsOptions = {},
+  ): Promise<models.ResourceHistory> {
+    const query = new URLSearchParams();
+    addQuery(query, "cursor", options.cursor, "single", false, false);
+    addQuery(query, "end", options.end, "single", false, false);
+    addQuery(query, "limit", options.limit, "single", false, false);
+    addQuery(query, "start", options.start, "single", false, false);
+    return this.#transport.request(
+      "GET",
+      encodePath("/v1/economics/series/{series_id}/observations", {
+        series_id: series_id,
+      }),
+      query,
+      undefined,
+      decoders.decodeResourceHistory,
+      options.signal,
+    );
+  }
+  /**
+   * Read Resource History
+   * Stability: stable.
+   * @param series_id Path parameter.
+   * @param options Query parameters, request fields and cancellation signal.
+   * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
+   * @param options.end Wire parameter.
+   * @param options.limit Wire parameter.
+   * @param options.start Wire parameter.
+   * @returns Items yielded lazily across pages.
+   */
+  readSeriesObservationsIter(
+    series_id: string,
+    options: EconomicsReadSeriesObservationsOptions = {},
+  ): AsyncIterableIterator<models.ResourceObservation> {
+    return iterate(
+      async (cursor) => {
+        const page = await this.readSeriesObservations(series_id, {
+          ...options,
+          cursor,
+        });
+        return { items: page.observations, cursor: page.next_cursor };
+      },
+      options.cursor,
+      this.#transport.signal(options.signal),
+    );
+  }
 }
 export interface EventsListOptions extends RequestOptions {
   countries?: Array<string>;
@@ -2102,6 +2168,7 @@ export interface PredictionsBinaryOptions extends RequestOptions {
   at?: string;
 }
 export interface PredictionsBinaryHistoryOptions extends RequestOptions {
+  cursor?: string;
   end: string;
   interval?: string;
   start: string;
@@ -2110,6 +2177,7 @@ export interface PredictionsExtremeOptions extends RequestOptions {
   at?: string;
 }
 export interface PredictionsExtremeHistoryOptions extends RequestOptions {
+  cursor?: string;
   end: string;
   interval?: string;
   start: string;
@@ -2122,6 +2190,7 @@ export interface PredictionsScalarOptions extends RequestOptions {
   at?: string;
 }
 export interface PredictionsScalarHistoryOptions extends RequestOptions {
+  cursor?: string;
   end: string;
   interval?: string;
   start: string;
@@ -2130,6 +2199,7 @@ export interface PredictionsTimingOptions extends RequestOptions {
   at?: string;
 }
 export interface PredictionsTimingHistoryOptions extends RequestOptions {
+  cursor?: string;
   end: string;
   interval?: string;
   start: string;
@@ -2182,6 +2252,7 @@ export class Predictions {
    * @param event_id Path parameter.
    * @param options Query parameters, request fields and cancellation signal.
    * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
    * @param options.end Wire parameter.
    * @param options.interval Wire parameter.
    * @param options.start Wire parameter.
@@ -2192,6 +2263,7 @@ export class Predictions {
     options: PredictionsBinaryHistoryOptions,
   ): Promise<models.PredictionHistory> {
     const query = new URLSearchParams();
+    addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", true, false);
     addQuery(query, "interval", options.interval, "single", false, false);
     addQuery(query, "start", options.start, "single", true, false);
@@ -2204,6 +2276,31 @@ export class Predictions {
       undefined,
       decoders.decodePredictionHistory,
       options.signal,
+    );
+  }
+  /**
+   * Get Prediction History
+   * Stability: stable.
+   * @param event_id Path parameter.
+   * @param options Query parameters, request fields and cancellation signal.
+   * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
+   * @param options.end Wire parameter.
+   * @param options.interval Wire parameter.
+   * @param options.start Wire parameter.
+   * @returns Items yielded lazily across pages.
+   */
+  binaryHistoryIter(
+    event_id: string,
+    options: PredictionsBinaryHistoryOptions,
+  ): AsyncIterableIterator<models.PredictionSeries> {
+    return iterate(
+      async (cursor) => {
+        const page = await this.binaryHistory(event_id, { ...options, cursor });
+        return { items: page.series, cursor: page.next_cursor };
+      },
+      options.cursor,
+      this.#transport.signal(options.signal),
     );
   }
   /**
@@ -2236,6 +2333,7 @@ export class Predictions {
    * @param event_id Path parameter.
    * @param options Query parameters, request fields and cancellation signal.
    * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
    * @param options.end Wire parameter.
    * @param options.interval Wire parameter.
    * @param options.start Wire parameter.
@@ -2246,6 +2344,7 @@ export class Predictions {
     options: PredictionsExtremeHistoryOptions,
   ): Promise<models.PredictionHistory> {
     const query = new URLSearchParams();
+    addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", true, false);
     addQuery(query, "interval", options.interval, "single", false, false);
     addQuery(query, "start", options.start, "single", true, false);
@@ -2258,6 +2357,34 @@ export class Predictions {
       undefined,
       decoders.decodePredictionHistory,
       options.signal,
+    );
+  }
+  /**
+   * Get Prediction History
+   * Stability: stable.
+   * @param event_id Path parameter.
+   * @param options Query parameters, request fields and cancellation signal.
+   * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
+   * @param options.end Wire parameter.
+   * @param options.interval Wire parameter.
+   * @param options.start Wire parameter.
+   * @returns Items yielded lazily across pages.
+   */
+  extremeHistoryIter(
+    event_id: string,
+    options: PredictionsExtremeHistoryOptions,
+  ): AsyncIterableIterator<models.PredictionSeries> {
+    return iterate(
+      async (cursor) => {
+        const page = await this.extremeHistory(event_id, {
+          ...options,
+          cursor,
+        });
+        return { items: page.series, cursor: page.next_cursor };
+      },
+      options.cursor,
+      this.#transport.signal(options.signal),
     );
   }
   /**
@@ -2342,6 +2469,7 @@ export class Predictions {
    * @param event_id Path parameter.
    * @param options Query parameters, request fields and cancellation signal.
    * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
    * @param options.end Wire parameter.
    * @param options.interval Wire parameter.
    * @param options.start Wire parameter.
@@ -2352,6 +2480,7 @@ export class Predictions {
     options: PredictionsScalarHistoryOptions,
   ): Promise<models.PredictionHistory> {
     const query = new URLSearchParams();
+    addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", true, false);
     addQuery(query, "interval", options.interval, "single", false, false);
     addQuery(query, "start", options.start, "single", true, false);
@@ -2364,6 +2493,31 @@ export class Predictions {
       undefined,
       decoders.decodePredictionHistory,
       options.signal,
+    );
+  }
+  /**
+   * Get Prediction History
+   * Stability: stable.
+   * @param event_id Path parameter.
+   * @param options Query parameters, request fields and cancellation signal.
+   * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
+   * @param options.end Wire parameter.
+   * @param options.interval Wire parameter.
+   * @param options.start Wire parameter.
+   * @returns Items yielded lazily across pages.
+   */
+  scalarHistoryIter(
+    event_id: string,
+    options: PredictionsScalarHistoryOptions,
+  ): AsyncIterableIterator<models.PredictionSeries> {
+    return iterate(
+      async (cursor) => {
+        const page = await this.scalarHistory(event_id, { ...options, cursor });
+        return { items: page.series, cursor: page.next_cursor };
+      },
+      options.cursor,
+      this.#transport.signal(options.signal),
     );
   }
   /**
@@ -2396,6 +2550,7 @@ export class Predictions {
    * @param event_id Path parameter.
    * @param options Query parameters, request fields and cancellation signal.
    * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
    * @param options.end Wire parameter.
    * @param options.interval Wire parameter.
    * @param options.start Wire parameter.
@@ -2406,6 +2561,7 @@ export class Predictions {
     options: PredictionsTimingHistoryOptions,
   ): Promise<models.PredictionHistory> {
     const query = new URLSearchParams();
+    addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", true, false);
     addQuery(query, "interval", options.interval, "single", false, false);
     addQuery(query, "start", options.start, "single", true, false);
@@ -2418,6 +2574,31 @@ export class Predictions {
       undefined,
       decoders.decodePredictionHistory,
       options.signal,
+    );
+  }
+  /**
+   * Get Prediction History
+   * Stability: stable.
+   * @param event_id Path parameter.
+   * @param options Query parameters, request fields and cancellation signal.
+   * @param options.signal Cancels the call and further retries.
+   * @param options.cursor Wire parameter.
+   * @param options.end Wire parameter.
+   * @param options.interval Wire parameter.
+   * @param options.start Wire parameter.
+   * @returns Items yielded lazily across pages.
+   */
+  timingHistoryIter(
+    event_id: string,
+    options: PredictionsTimingHistoryOptions,
+  ): AsyncIterableIterator<models.PredictionSeries> {
+    return iterate(
+      async (cursor) => {
+        const page = await this.timingHistory(event_id, { ...options, cursor });
+        return { items: page.series, cursor: page.next_cursor };
+      },
+      options.cursor,
+      this.#transport.signal(options.signal),
     );
   }
   /**

@@ -1,5 +1,5 @@
-// Generated from spec/live/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
-// Generated from spec/next/openapi.json sha256 549d8458a8dcfbbccea3ea4b23f7d9163c6525ce932e4c5f6657fdd9b728985c. Do not edit.
+// Generated from spec/live/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
+// Generated from spec/next/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
 import {
   optional,
   readArray,
@@ -1169,6 +1169,7 @@ export function decodePredictionHistory(
       end: readString(data.end),
       event_id: readString(data.event_id),
       interval: readString(data.interval),
+      next_cursor: optional(data.next_cursor, readCursor),
       series: ((value: unknown) =>
         readArray(value).map((item) => decodePredictionSeries(item)))(
         data.series,
@@ -1285,6 +1286,33 @@ export function decodePredictionVenue(value: unknown): models.PredictionVenue {
     weight: optional(data.weight, readString),
   };
 }
+export function decodePredictionWebhookEvent(
+  value: unknown,
+): models.PredictionWebhookEvent {
+  const data = readObject(value);
+  return {
+    closes_at: optional(data.closes_at, readString),
+    event_id: readString(data.event_id),
+    release_id: optional(data.release_id, readString),
+    resolves_at: optional(data.resolves_at, readString),
+    settlements: ((value: unknown) =>
+      readArray(value).map((item) => decodePredictionWebhookSettlement(item)))(
+      data.settlements,
+    ),
+    shape: readString(data.shape),
+    status: readString(data.status),
+    topic_id: readString(data.topic_id),
+  };
+}
+export function decodePredictionWebhookSettlement(
+  value: unknown,
+): models.PredictionWebhookSettlement {
+  const data = readObject(value);
+  return {
+    status: readString(data.status),
+    venue: readString(data.venue),
+  };
+}
 export function decodeProblem(value: unknown): models.Problem {
   const data = readObject(value);
   return {
@@ -1306,6 +1334,38 @@ export function decodeQuote(value: unknown): models.Quote {
     probability: readString(data.probability),
     role: readString(data.role),
     venue: readString(data.venue),
+  };
+}
+export function decodeResourceHistory(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.ResourceHistory {
+  const data = readObject(value);
+  return withMeta(
+    {
+      country: readString(data.country),
+      currency: optional(data.currency, readString),
+      next_cursor: optional(data.next_cursor, readCursor),
+      observations: ((value: unknown) =>
+        readArray(value).map((item) => decodeResourceObservation(item)))(
+        data.observations,
+      ),
+      series_id: readString(data.series_id),
+      source: optional(data.source, decodeSeriesSource),
+      unit: readString(data.unit),
+    },
+    meta,
+  );
+}
+export function decodeResourceObservation(
+  value: unknown,
+): models.ResourceObservation {
+  const data = readObject(value);
+  return {
+    period: readString(data.period),
+    released_on: optional(data.released_on, readString),
+    status: optional(data.status, readString),
+    value: readDecimal(data.value),
   };
 }
 export function decodeScalarBody(value: unknown): models.ScalarBody {
@@ -1620,6 +1680,7 @@ export function decodeWebhookDestinationCreated(
         readArray(value).map((item) => readString(item)))(data.countries),
       created_at: readString(data.created_at),
       destination_id: readString(data.destination_id),
+      disabled_reason: optional(data.disabled_reason, readString),
       enabled: readBool(data.enabled),
       families: ((value: unknown) =>
         readArray(value).map((item) => readString(item)))(data.families),
@@ -1672,6 +1733,7 @@ export function decodeWebhookDestinationResponse(
         readArray(value).map((item) => readString(item)))(data.countries),
       created_at: readString(data.created_at),
       destination_id: readString(data.destination_id),
+      disabled_reason: optional(data.disabled_reason, readString),
       enabled: readBool(data.enabled),
       families: ((value: unknown) =>
         readArray(value).map((item) => readString(item)))(data.families),
@@ -1681,6 +1743,27 @@ export function decodeWebhookDestinationResponse(
     },
     meta,
   );
+}
+export function decodeWebhookEvent(value: unknown): models.WebhookEvent {
+  const data = readObject(value);
+  return {
+    country: optional(data.country, readString),
+    cursor: optional(data.cursor, readString),
+    event_id: readString(data.event_id),
+    family: optional(data.family, readString),
+    holiday_country: optional(data.holiday_country, readString),
+    holiday_generation: optional(data.holiday_generation, readInt),
+    holiday_year: optional(data.holiday_year, readInt),
+    is_test: optional(data.is_test, readBool),
+    prediction: optional(data.prediction, decodePredictionWebhookEvent),
+    publication_id: optional(data.publication_id, readString),
+    recorded_at: readString(data.recorded_at),
+    release_id: optional(data.release_id, readString),
+    resource_id: optional(data.resource_id, readString),
+    resource_version: optional(data.resource_version, readString),
+    schema_version: readString(data.schema_version),
+    type: readString(data.type),
+  };
 }
 export function decodeWebhookHistoryResponse(
   value: unknown,

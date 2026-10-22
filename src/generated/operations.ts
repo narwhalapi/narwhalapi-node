@@ -1,5 +1,5 @@
-// Generated from spec/live/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
-// Generated from spec/next/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
+// Generated from spec/live/openapi.json sha256 ba06d620d3f1f03774f3f30363a59e00f14ab7cde053c552d2164ad83a9ea678. Do not edit.
+// Generated from spec/next/openapi.json sha256 ba06d620d3f1f03774f3f30363a59e00f14ab7cde053c552d2164ad83a9ea678. Do not edit.
 import type { Decimal } from "../decode.js";
 import { iterate, unknownPage } from "../pagination.js";
 import {
@@ -26,7 +26,7 @@ import type {
   WebhookFamily,
 } from "./models.js";
 export const LIVE_SPEC_SHA =
-  "a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8";
+  "ba06d620d3f1f03774f3f30363a59e00f14ab7cde053c552d2164ad83a9ea678";
 export interface CalendarSubscriptionsCreateOptions extends RequestOptions {
   countries: Array<string>;
   end_date: string;
@@ -91,7 +91,7 @@ export class CalendarSubscriptions {
   async revoke(
     subscription_id: string,
     options: RequestOptions = {},
-  ): Promise<models.CalendarSubscriptionRevoked> {
+  ): Promise<models.NoContent> {
     const query = new URLSearchParams();
     return this.#transport.request(
       "DELETE",
@@ -100,7 +100,7 @@ export class CalendarSubscriptions {
       }),
       query,
       undefined,
-      decoders.decodeCalendarSubscriptionRevoked,
+      decoders.decodeNoContent,
       options.signal,
     );
   }
@@ -264,7 +264,6 @@ export interface CommoditiesListPhysicalSeriesOptions extends RequestOptions {
   currency?: string;
   cursor?: string;
   limit?: number;
-  market?: string;
   price_type?: PhysicalPriceType;
 }
 export class Commodities {
@@ -662,7 +661,6 @@ export class Commodities {
    * @param options.currency Wire parameter.
    * @param options.cursor Wire parameter.
    * @param options.limit Wire parameter.
-   * @param options.market Wire parameter.
    * @param options.price_type Wire parameter.
    * @returns Decoded response with header metadata.
    */
@@ -676,7 +674,6 @@ export class Commodities {
     addQuery(query, "currency", options.currency, "single", false, false);
     addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "limit", options.limit, "single", false, false);
-    addQuery(query, "market", options.market, "single", false, false);
     addQuery(query, "price_type", options.price_type, "single", false, false);
     return this.#transport.request(
       "GET",
@@ -698,7 +695,6 @@ export class Commodities {
    * @param options.currency Wire parameter.
    * @param options.cursor Wire parameter.
    * @param options.limit Wire parameter.
-   * @param options.market Wire parameter.
    * @param options.price_type Wire parameter.
    * @returns Items yielded lazily across pages.
    */
@@ -774,33 +770,7 @@ export interface EconomicsTradeOptions extends RequestOptions {
   period?: string;
   version_id?: string;
 }
-export interface EconomicsTradeExportsOptions extends RequestOptions {
-  classification?: string;
-  partner?: string;
-  period?: string;
-  product?: string;
-  version_id?: string;
-}
-export interface EconomicsTradeExportsHistoryOptions extends RequestOptions {
-  cursor?: string;
-  end?: string;
-  limit?: number;
-  start?: string;
-}
 export interface EconomicsTradeHistoryOptions extends RequestOptions {
-  cursor?: string;
-  end?: string;
-  limit?: number;
-  start?: string;
-}
-export interface EconomicsTradeImportsOptions extends RequestOptions {
-  classification?: string;
-  partner?: string;
-  period?: string;
-  product?: string;
-  version_id?: string;
-}
-export interface EconomicsTradeImportsHistoryOptions extends RequestOptions {
   cursor?: string;
   end?: string;
   limit?: number;
@@ -887,7 +857,7 @@ export class Economics {
   async cpiHistory(
     country: string,
     options: EconomicsCpiHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
+  ): Promise<models.CpiHistory> {
     const query = new URLSearchParams();
     addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", false, false);
@@ -900,7 +870,7 @@ export class Economics {
       }),
       query,
       undefined,
-      decoders.decodeHistoricalEconomicsResponse,
+      decoders.decodeCpiHistory,
       options.signal,
     );
   }
@@ -919,7 +889,7 @@ export class Economics {
   cpiHistoryIter(
     country: string,
     options: EconomicsCpiHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
+  ): AsyncIterableIterator<models.CpiHistoryObservation> {
     return iterate(
       async (cursor) => {
         const page = await this.cpiHistory(country, { ...options, cursor });
@@ -996,7 +966,7 @@ export class Economics {
   async gdpGrowthHistory(
     country: string,
     options: EconomicsGdpGrowthHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
+  ): Promise<models.GdpGrowthHistory> {
     const query = new URLSearchParams();
     addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", false, false);
@@ -1009,7 +979,7 @@ export class Economics {
       }),
       query,
       undefined,
-      decoders.decodeHistoricalEconomicsResponse,
+      decoders.decodeGdpGrowthHistory,
       options.signal,
     );
   }
@@ -1028,7 +998,7 @@ export class Economics {
   gdpGrowthHistoryIter(
     country: string,
     options: EconomicsGdpGrowthHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
+  ): AsyncIterableIterator<models.GdpGrowthHistoryObservation> {
     return iterate(
       async (cursor) => {
         const page = await this.gdpGrowthHistory(country, {
@@ -1056,7 +1026,7 @@ export class Economics {
   async gdpHistory(
     country: string,
     options: EconomicsGdpHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
+  ): Promise<models.GdpHistory> {
     const query = new URLSearchParams();
     addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", false, false);
@@ -1069,7 +1039,7 @@ export class Economics {
       }),
       query,
       undefined,
-      decoders.decodeHistoricalEconomicsResponse,
+      decoders.decodeGdpHistory,
       options.signal,
     );
   }
@@ -1088,7 +1058,7 @@ export class Economics {
   gdpHistoryIter(
     country: string,
     options: EconomicsGdpHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
+  ): AsyncIterableIterator<models.GdpHistoryObservation> {
     return iterate(
       async (cursor) => {
         const page = await this.gdpHistory(country, { ...options, cursor });
@@ -1139,7 +1109,7 @@ export class Economics {
   async inflationHistory(
     country: string,
     options: EconomicsInflationHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
+  ): Promise<models.InflationHistory> {
     const query = new URLSearchParams();
     addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", false, false);
@@ -1152,7 +1122,7 @@ export class Economics {
       }),
       query,
       undefined,
-      decoders.decodeHistoricalEconomicsResponse,
+      decoders.decodeInflationHistory,
       options.signal,
     );
   }
@@ -1171,7 +1141,7 @@ export class Economics {
   inflationHistoryIter(
     country: string,
     options: EconomicsInflationHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
+  ): AsyncIterableIterator<models.InflationHistoryObservation> {
     return iterate(
       async (cursor) => {
         const page = await this.inflationHistory(country, {
@@ -1227,7 +1197,7 @@ export class Economics {
   async labourForceParticipationHistory(
     country: string,
     options: EconomicsLabourForceParticipationHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
+  ): Promise<models.RateHistory> {
     const query = new URLSearchParams();
     addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", false, false);
@@ -1241,7 +1211,7 @@ export class Economics {
       ),
       query,
       undefined,
-      decoders.decodeHistoricalEconomicsResponse,
+      decoders.decodeRateHistory,
       options.signal,
     );
   }
@@ -1260,7 +1230,7 @@ export class Economics {
   labourForceParticipationHistoryIter(
     country: string,
     options: EconomicsLabourForceParticipationHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
+  ): AsyncIterableIterator<models.RateHistoryObservation> {
     return iterate(
       async (cursor) => {
         const page = await this.labourForceParticipationHistory(country, {
@@ -1285,7 +1255,7 @@ export class Economics {
   async getRelease(
     release_id: string,
     options: EconomicsGetReleaseOptions = {},
-  ): Promise<models.EconomicRelease> {
+  ): Promise<models.EconomicReleaseDetail> {
     const query = new URLSearchParams();
     addQuery(query, "version_id", options.version_id, "single", false, false);
     return this.#transport.request(
@@ -1295,7 +1265,7 @@ export class Economics {
       }),
       query,
       undefined,
-      decoders.decodeEconomicRelease,
+      decoders.decodeEconomicReleaseDetail,
       options.signal,
     );
   }
@@ -1326,105 +1296,6 @@ export class Economics {
     );
   }
   /**
-   * Get Trade Exports
-   * Stability: stable.
-   * @param country Path parameter.
-   * @param options Query parameters, request fields and cancellation signal.
-   * @param options.signal Cancels the call and further retries.
-   * @param options.classification Wire parameter.
-   * @param options.partner Wire parameter.
-   * @param options.period Wire parameter.
-   * @param options.product Wire parameter.
-   * @param options.version_id Wire parameter.
-   * @returns Decoded response with header metadata.
-   */
-  async tradeExports(
-    country: string,
-    options: EconomicsTradeExportsOptions = {},
-  ): Promise<models.TradeExports> {
-    const query = new URLSearchParams();
-    addQuery(
-      query,
-      "classification",
-      options.classification,
-      "single",
-      false,
-      false,
-    );
-    addQuery(query, "partner", options.partner, "single", false, false);
-    addQuery(query, "period", options.period, "single", false, false);
-    addQuery(query, "product", options.product, "single", false, false);
-    addQuery(query, "version_id", options.version_id, "single", false, false);
-    return this.#transport.request(
-      "GET",
-      encodePath("/v1/economics/{country}/trade/exports", { country: country }),
-      query,
-      undefined,
-      decoders.decodeTradeExports,
-      options.signal,
-    );
-  }
-  /**
-   * Get Economics History
-   * Stability: stable.
-   * @param country Path parameter.
-   * @param options Query parameters, request fields and cancellation signal.
-   * @param options.signal Cancels the call and further retries.
-   * @param options.cursor Wire parameter.
-   * @param options.end Wire parameter.
-   * @param options.limit Wire parameter.
-   * @param options.start Wire parameter.
-   * @returns Decoded response with header metadata.
-   */
-  async tradeExportsHistory(
-    country: string,
-    options: EconomicsTradeExportsHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
-    const query = new URLSearchParams();
-    addQuery(query, "cursor", options.cursor, "single", false, false);
-    addQuery(query, "end", options.end, "single", false, false);
-    addQuery(query, "limit", options.limit, "single", false, false);
-    addQuery(query, "start", options.start, "single", false, false);
-    return this.#transport.request(
-      "GET",
-      encodePath("/v1/economics/{country}/trade/exports/observations", {
-        country: country,
-      }),
-      query,
-      undefined,
-      decoders.decodeHistoricalEconomicsResponse,
-      options.signal,
-    );
-  }
-  /**
-   * Get Economics History
-   * Stability: stable.
-   * @param country Path parameter.
-   * @param options Query parameters, request fields and cancellation signal.
-   * @param options.signal Cancels the call and further retries.
-   * @param options.cursor Wire parameter.
-   * @param options.end Wire parameter.
-   * @param options.limit Wire parameter.
-   * @param options.start Wire parameter.
-   * @returns Items yielded lazily across pages.
-   */
-  tradeExportsHistoryIter(
-    country: string,
-    options: EconomicsTradeExportsHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
-    return iterate(
-      async (cursor) => {
-        const page = await this.tradeExportsHistory(country, {
-          ...options,
-          cursor,
-        });
-        return { items: page.observations, cursor: page.next_cursor };
-      },
-      options.cursor,
-      this.#transport.signal(options.signal),
-    );
-  }
-  /**
    * Get Economics History
    * Stability: stable.
    * @param country Path parameter.
@@ -1439,7 +1310,7 @@ export class Economics {
   async tradeHistory(
     country: string,
     options: EconomicsTradeHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
+  ): Promise<models.TradeHistory> {
     const query = new URLSearchParams();
     addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", false, false);
@@ -1452,7 +1323,7 @@ export class Economics {
       }),
       query,
       undefined,
-      decoders.decodeHistoricalEconomicsResponse,
+      decoders.decodeTradeHistory,
       options.signal,
     );
   }
@@ -1471,109 +1342,10 @@ export class Economics {
   tradeHistoryIter(
     country: string,
     options: EconomicsTradeHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
+  ): AsyncIterableIterator<models.TradeHistoryObservation> {
     return iterate(
       async (cursor) => {
         const page = await this.tradeHistory(country, { ...options, cursor });
-        return { items: page.observations, cursor: page.next_cursor };
-      },
-      options.cursor,
-      this.#transport.signal(options.signal),
-    );
-  }
-  /**
-   * Get Trade Imports
-   * Stability: stable.
-   * @param country Path parameter.
-   * @param options Query parameters, request fields and cancellation signal.
-   * @param options.signal Cancels the call and further retries.
-   * @param options.classification Wire parameter.
-   * @param options.partner Wire parameter.
-   * @param options.period Wire parameter.
-   * @param options.product Wire parameter.
-   * @param options.version_id Wire parameter.
-   * @returns Decoded response with header metadata.
-   */
-  async tradeImports(
-    country: string,
-    options: EconomicsTradeImportsOptions = {},
-  ): Promise<models.TradeImports> {
-    const query = new URLSearchParams();
-    addQuery(
-      query,
-      "classification",
-      options.classification,
-      "single",
-      false,
-      false,
-    );
-    addQuery(query, "partner", options.partner, "single", false, false);
-    addQuery(query, "period", options.period, "single", false, false);
-    addQuery(query, "product", options.product, "single", false, false);
-    addQuery(query, "version_id", options.version_id, "single", false, false);
-    return this.#transport.request(
-      "GET",
-      encodePath("/v1/economics/{country}/trade/imports", { country: country }),
-      query,
-      undefined,
-      decoders.decodeTradeImports,
-      options.signal,
-    );
-  }
-  /**
-   * Get Economics History
-   * Stability: stable.
-   * @param country Path parameter.
-   * @param options Query parameters, request fields and cancellation signal.
-   * @param options.signal Cancels the call and further retries.
-   * @param options.cursor Wire parameter.
-   * @param options.end Wire parameter.
-   * @param options.limit Wire parameter.
-   * @param options.start Wire parameter.
-   * @returns Decoded response with header metadata.
-   */
-  async tradeImportsHistory(
-    country: string,
-    options: EconomicsTradeImportsHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
-    const query = new URLSearchParams();
-    addQuery(query, "cursor", options.cursor, "single", false, false);
-    addQuery(query, "end", options.end, "single", false, false);
-    addQuery(query, "limit", options.limit, "single", false, false);
-    addQuery(query, "start", options.start, "single", false, false);
-    return this.#transport.request(
-      "GET",
-      encodePath("/v1/economics/{country}/trade/imports/observations", {
-        country: country,
-      }),
-      query,
-      undefined,
-      decoders.decodeHistoricalEconomicsResponse,
-      options.signal,
-    );
-  }
-  /**
-   * Get Economics History
-   * Stability: stable.
-   * @param country Path parameter.
-   * @param options Query parameters, request fields and cancellation signal.
-   * @param options.signal Cancels the call and further retries.
-   * @param options.cursor Wire parameter.
-   * @param options.end Wire parameter.
-   * @param options.limit Wire parameter.
-   * @param options.start Wire parameter.
-   * @returns Items yielded lazily across pages.
-   */
-  tradeImportsHistoryIter(
-    country: string,
-    options: EconomicsTradeImportsHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
-    return iterate(
-      async (cursor) => {
-        const page = await this.tradeImportsHistory(country, {
-          ...options,
-          cursor,
-        });
         return { items: page.observations, cursor: page.next_cursor };
       },
       options.cursor,
@@ -1621,7 +1393,7 @@ export class Economics {
   async unemploymentHistory(
     country: string,
     options: EconomicsUnemploymentHistoryOptions = {},
-  ): Promise<models.HistoricalEconomicsResponse> {
+  ): Promise<models.RateHistory> {
     const query = new URLSearchParams();
     addQuery(query, "cursor", options.cursor, "single", false, false);
     addQuery(query, "end", options.end, "single", false, false);
@@ -1634,7 +1406,7 @@ export class Economics {
       }),
       query,
       undefined,
-      decoders.decodeHistoricalEconomicsResponse,
+      decoders.decodeRateHistory,
       options.signal,
     );
   }
@@ -1653,7 +1425,7 @@ export class Economics {
   unemploymentHistoryIter(
     country: string,
     options: EconomicsUnemploymentHistoryOptions = {},
-  ): AsyncIterableIterator<models.HistoricalObservation> {
+  ): AsyncIterableIterator<models.RateHistoryObservation> {
     return iterate(
       async (cursor) => {
         const page = await this.unemploymentHistory(country, {
@@ -1778,7 +1550,6 @@ export class Economics {
     addQuery(query, "end_date", options.end_date, "single", false, false);
     addQuery(query, "limit", options.limit, "single", false, false);
     addQuery(query, "start_date", options.start_date, "single", false, false);
-    query.append("view", "full");
     return this.#transport.request(
       "GET",
       encodePath("/v1/economics/calendar", {}),
@@ -1802,7 +1573,7 @@ export class Economics {
    */
   listReleasesIter(
     options: EconomicsListReleasesOptions = {},
-  ): AsyncIterableIterator<models.EconomicRelease> {
+  ): AsyncIterableIterator<models.EconomicReleaseSummary> {
     return iterate(
       async (cursor) => {
         const page = await this.listReleases({ ...options, cursor });
@@ -2798,7 +2569,7 @@ export class Webhooks {
   async deleteDestination(
     destination_id: string,
     options: RequestOptions = {},
-  ): Promise<models.WebhookDeleteResponse> {
+  ): Promise<models.NoContent> {
     const query = new URLSearchParams();
     return this.#transport.request(
       "DELETE",
@@ -2807,7 +2578,7 @@ export class Webhooks {
       }),
       query,
       undefined,
-      decoders.decodeWebhookDeleteResponse,
+      decoders.decodeNoContent,
       options.signal,
     );
   }
@@ -2922,7 +2693,7 @@ export class Webhooks {
     delivery_id: string,
     destination_id: string,
     options: RequestOptions = {},
-  ): Promise<models.WebhookReplayResponse> {
+  ): Promise<models.NoContent> {
     const query = new URLSearchParams();
     return this.#transport.request(
       "POST",
@@ -2932,7 +2703,7 @@ export class Webhooks {
       ),
       query,
       undefined,
-      decoders.decodeWebhookReplayResponse,
+      decoders.decodeNoContent,
       options.signal,
     );
   }

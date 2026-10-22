@@ -87,8 +87,31 @@ export async function verifyWebhook(
   }
   if (!matched) throw new WebhookVerificationError("no_matching_signature");
   try {
-    return decodeWebhookEvent(readJson(message.subarray(prefix.length)));
+    return decodeWebhookEvent(
+      withCurrentNames(readJson(message.subarray(prefix.length))),
+    );
   } catch {
     throw new WebhookVerificationError("invalid_body");
   }
+}
+
+/**
+ * Queued retries and replays keep the body they were first sent with. A prediction body sent
+ * before the 22 October 2026 lean contracts names the market `event_id`.
+ */
+function withCurrentNames(body: unknown): unknown {
+  if (typeof body !== "object" || body === null) return body;
+  const prediction = (body as { prediction?: unknown }).prediction;
+  if (
+    typeof prediction === "object" &&
+    prediction !== null &&
+    !("prediction_event_id" in prediction) &&
+    "event_id" in prediction
+  ) {
+    (body as { prediction: unknown }).prediction = {
+      ...prediction,
+      prediction_event_id: (prediction as { event_id: unknown }).event_id,
+    };
+  }
+  return body;
 }

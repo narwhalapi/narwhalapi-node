@@ -202,4 +202,13 @@ accepted. Pass a `Uint8Array` (including Node buffers) or `ArrayBuffer`; strings
 are rejected. Headers may be a `Headers` object, Node/Express `req.headers`, or
 an array of pairs. Array header values are comma-joined; undefined values are absent.
 
+## Links
+
+- https://narwhalapi.com/
+- https://narwhalapi.com/docs
+- https://narwhalapi.com/pricing
+- https://narwhalapi.com/compare/economic-data-apis
+- https://narwhalapi.com/commodities/gold
+- https://narwhalapi.com/economics/united-states
+
 MIT licensed. [Narwhal API](https://narwhalapi.com).

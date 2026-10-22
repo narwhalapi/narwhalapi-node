@@ -246,7 +246,16 @@ export class Transport {
       const { response, raw } = received;
       if (response.ok) {
         try {
-          return decode(readJson(raw), responseMeta(response.headers), raw);
+          // A 204 answer has no body; it reads as an empty object.
+          return decode(
+            readJson(
+              response.status === 204 && raw.length === 0
+                ? new TextEncoder().encode("{}")
+                : raw,
+            ),
+            responseMeta(response.headers),
+            raw,
+          );
         } catch {
           throw new DecodeError(raw);
         }

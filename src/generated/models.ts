@@ -1,8 +1,7 @@
-// Generated from spec/live/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
-// Generated from spec/next/openapi.json sha256 a8f87a3ac708cc35c7a08fa69c5bf4c3edeea4259ff31a8cc7a3f6ded6b553a8. Do not edit.
+// Generated from spec/live/openapi.json sha256 ba06d620d3f1f03774f3f30363a59e00f14ab7cde053c552d2164ad83a9ea678. Do not edit.
+// Generated from spec/next/openapi.json sha256 ba06d620d3f1f03774f3f30363a59e00f14ab7cde053c552d2164ad83a9ea678. Do not edit.
 import type { Decimal } from "../decode.js";
 import type { ResponseMeta } from "../meta.js";
-export type Annualization = "annualized" | "not_annualized" | (string & {});
 export type BarInterval =
   | "15m"
   | "1d"
@@ -10,15 +9,6 @@ export type BarInterval =
   | "1m"
   | "4h"
   | "5m"
-  | (string & {});
-export type CentralBank =
-  | "bank-indonesia"
-  | "bank-of-canada"
-  | "bank-of-england"
-  | "bank-of-japan"
-  | "european-central-bank"
-  | "federal-reserve"
-  | "reserve-bank-of-australia"
   | (string & {});
 export type CommodityUnit = "barrel" | "pound" | "troy_ounce" | (string & {});
 export type DeliveryFamily =
@@ -48,15 +38,14 @@ export type EconomicFamily =
   | "trade"
   | "yield_curve"
   | (string & {});
+export type EconomicReleaseValueValueStatus =
+  | "pending_capture"
+  | "unavailable"
+  | (string & {});
 export type ExtremeObservation =
   | "any_release"
   | "any_trade"
   | "close"
-  | (string & {});
-export type GrowthSeasonalAdjustment =
-  | "mixed"
-  | "not_seasonally_adjusted"
-  | "seasonally_adjusted"
   | (string & {});
 export type HolidayScope =
   | "bank"
@@ -75,12 +64,6 @@ export type IndicatorUnit =
   | "percent"
   | "ratio"
   | "thousands"
-  | (string & {});
-export type IndicatorValueStatus =
-  | "available"
-  | "not_released"
-  | "pending_capture"
-  | "unavailable"
   | (string & {});
 export type MarketSession =
   | "interbank_closed"
@@ -156,7 +139,6 @@ export type PredictionEventStatus =
   | "upcoming"
   | "void"
   | (string & {});
-export type PredictionInterval = "1d" | "1h" | "1m" | "5m" | (string & {});
 export type PredictionShape =
   | "binary"
   | "categorical"
@@ -165,6 +147,7 @@ export type PredictionShape =
   | "set"
   | "timing"
   | (string & {});
+export type PredictionVenueSettlement = "settled" | "void" | (string & {});
 export type PredictionWebhookStatus =
   | "closed"
   | "settled"
@@ -174,12 +157,6 @@ export type ProducerArrangement =
   | "purchase_agreement"
   | "supported_scheme"
   | (string & {});
-export type QuoteFreshness =
-  | "live"
-  | "no_live_quotes"
-  | "stale"
-  | (string & {});
-export type QuoteRole = "blended" | "excluded" | (string & {});
 export type ReleaseStage =
   | "advance"
   | "final"
@@ -251,18 +228,7 @@ export type ResourceUnit =
   | "percent"
   | "person"
   | (string & {});
-export type SchedulePrecision =
-  | "date"
-  | "deadline"
-  | "estimated_range"
-  | "exact"
-  | "unknown"
-  | (string & {});
-export type ScheduleTimeBasis = "calendar" | "standard_time" | (string & {});
-export type SeasonalAdjustment =
-  | "not_seasonally_adjusted"
-  | "seasonally_adjusted"
-  | (string & {});
+export type ScalarEventAbove = "median" | "p10" | "p90" | (string & {});
 export type SettlementStatus =
   | "disputed"
   | "pending"
@@ -279,21 +245,6 @@ export type TopicGroup =
   | "us_activity"
   | "us_jobs"
   | "us_prices"
-  | (string & {});
-export type ValueScale =
-  | "billions"
-  | "hundred_millions"
-  | "millions"
-  | "thousands"
-  | "units"
-  | (string & {});
-export type ValueTransformation =
-  | "change"
-  | "level"
-  | "month_over_month"
-  | "quarter_over_quarter"
-  | "three_month_on_three_month"
-  | "year_over_year"
   | (string & {});
 export type Venue = "kalshi" | "polymarket" | (string & {});
 export type VenueDifference =
@@ -359,26 +310,29 @@ export type YieldCurveType =
   | "spot_svensson"
   | "zero_coupon"
   | (string & {});
-export interface BinaryBody {
-  deadline?: string;
-  labels: BinaryLabels;
-  probability?: string;
-  quotes: Array<Quote>;
-}
 export interface BinaryEvent {
+  /** When the venues were last checked. */
   as_of?: string;
-  body: BinaryBody;
   closes_at?: string;
   event_id: string;
-  quality: PredictionQuality;
+  /** Sent only when not Yes and No. */
+  labels?: BinaryLabels;
+  probability?: string;
   question: string;
-  /** Economic calendar release this market resolves on, only when Narwhal publishes that release; otherwise null. */
+  quotes: Array<Quote>;
+  /** Economic calendar release this market resolves on, only when Narwhal publishes that release. */
   release_id?: string;
-  resolution: PredictionResolution;
+  resolution: string;
   resolves_at?: string;
-  shape: string;
+  /** Narwhal endpoint that publishes the official value; not part of this API. */
+  resolves_with?: string;
+  /** The venues' results with each market's outcome, on settled and void events once this plan may see them: Free from the next day, Basic and Pro at once. */
+  result?: PredictionResult;
+  /** Sent on upcoming, trading and closed events. On upcoming and trading events, true after more than 3 minutes without a venue check or when the stored snapshot was already stale. On those events, more than 30 minutes without a venue check or a missing check time means no_live_quotes. A stored no_live_quotes snapshot also applies to closed events. With no_live_quotes, no probabilities are sent, every `quotes` list is empty and every venue is excluded. The exclusion reason is stale unless the venue already has another reason. Closed events are stale only when their stored snapshot was already stale; elapsed time never makes them stale. Do not trade on stale events. Absent on settled and void events. */
+  stale?: boolean;
   status: PredictionEventStatus;
   topic_id: string;
+  /** Combined unit text such as usd_per_barrel. */
   unit?: string;
   venues: Array<PredictionVenue>;
   readonly meta: ResponseMeta;
@@ -388,7 +342,6 @@ export interface BinaryLabels {
   yes: string;
 }
 export interface CalendarCoverage {
-  nationwide: boolean;
   scope: HolidayScope;
   subdivision_codes?: Array<string>;
 }
@@ -396,7 +349,6 @@ export interface CalendarHoliday {
   date: string;
   local_name?: string;
   name: string;
-  nationwide: boolean;
   observed?: boolean;
   scope: HolidayScope;
   subdivision_codes?: Array<string>;
@@ -405,26 +357,22 @@ export interface CalendarHolidays {
   country: string;
   coverage: Array<CalendarCoverage>;
   holidays: Array<CalendarHoliday>;
-  year: number;
   readonly meta: ResponseMeta;
 }
 export interface CalendarHolidaysOnDate {
   country: string;
   coverage: Array<CalendarCoverage>;
-  date: string;
   holidays: Array<CalendarHoliday>;
   readonly meta: ResponseMeta;
 }
 export interface CalendarNextHoliday {
   country: string;
   coverage: Array<CalendarCoverage>;
-  from_date: string;
   holiday?: CalendarHoliday;
   readonly meta: ResponseMeta;
 }
 export interface CalendarSubscriptionCreated {
   expires_at: string;
-  refresh_note?: string;
   subscription_id: string;
   url: string;
   readonly meta: ResponseMeta;
@@ -438,11 +386,6 @@ export interface CalendarSubscriptionInput {
   scope?: string;
   start_date: string;
 }
-export interface CalendarSubscriptionRevoked {
-  revoked?: boolean;
-  subscription_id: string;
-  readonly meta: ResponseMeta;
-}
 export interface CommodityBar {
   close: Decimal;
   high?: Decimal;
@@ -453,10 +396,11 @@ export interface CommodityBar {
 export interface CommodityBars {
   bars: Array<CommodityBar>;
   currency: string;
-  end: string;
-  interval: BarInterval;
+  /** Sent only when the plan cut the requested end: the exclusive end served. */
+  end?: string;
   next_cursor?: string;
-  start: string;
+  /** Sent only when the plan raised the requested start: the first instant served. */
+  start?: string;
   symbol: string;
   unit: CommodityUnit;
   readonly meta: ResponseMeta;
@@ -476,9 +420,9 @@ export interface CommoditySpot {
   readonly meta: ResponseMeta;
 }
 export interface Cpi {
-  base_period: string;
-  base_value: Decimal;
   country: string;
+  /** Base period and base value of the index, for example 1982-84=100. */
+  index_base: string;
   period: string;
   released_on: string;
   /** Present only when a distributor, not the original publisher, supplies the data. */
@@ -486,129 +430,175 @@ export interface Cpi {
   value: Decimal;
   readonly meta: ResponseMeta;
 }
+export interface CpiHistory {
+  /** When the source last updated the newest observation on this page. */
+  as_of?: string;
+  country: string;
+  /** Base period and base value of the index, for example 1982-84=100. */
+  index_base: string;
+  next_cursor?: string;
+  observations: Array<CpiHistoryObservation>;
+  /** Present only when a distributor, not the original publisher, supplies the data. */
+  source?: SeriesSource;
+  /** The start of the plan window, present only when the plan raised the requested start. Earlier periods are not served. */
+  start?: string;
+  readonly meta: ResponseMeta;
+}
+export interface CpiHistoryObservation {
+  period: string;
+  value: Decimal;
+}
 export interface DeliveryEvent {
   country: string;
   cursor: string;
   event_id: string;
-  /** Deprecated: the same value as `type`, kept for earlier callers. */
-  event_type: string;
   family: DeliveryFamily;
-  holiday_country?: string;
+  /** Holiday events only. */
   holiday_generation?: number;
+  /** Holiday events only. */
   holiday_year?: number;
-  publication_id?: string;
   recorded_at: string;
+  /** The release, on release events. */
   release_id?: string;
+  /** The changed resource. Left out on release events, which carry `release_id`. */
   resource_id?: string;
+  /** Version of the changed resource: the `version_id` used to read that version of the data. */
   resource_version?: string;
-  schema_version?: string;
   type: string;
 }
 export interface EconomicCalendar {
-  as_of: string;
   next_cursor?: string;
-  releases: Array<EconomicRelease>;
-  snapshot: string;
-  status?: string;
+  releases: Array<EconomicReleaseSummary>;
   readonly meta: ResponseMeta;
 }
-export interface EconomicRelease {
+export interface EconomicReleaseDetail {
+  /** Exact release time, in UTC. */
+  at?: string;
+  /** Inclusive range of possible days. */
+  between?: Array<string>;
+  /** Latest possible release day. */
+  by?: string;
   country: string;
+  /** Release day when no time is set. */
+  date?: string;
   family: EconomicFamily;
-  indicators?: Array<EconomicReleaseIndicator>;
-  /** Narwhal's standard English name for the release series, from one closed list. */
   name: string;
+  /** Source terms the publisher requires with each access (for example the ECB). Show it with the release. */
   notice?: string;
+  /** When Narwhal last observed the release in the publisher's calendar. */
   observed_at?: string;
-  officially_published_at?: string;
-  reference_period?: string;
+  period?: string;
   release_id: string;
-  revision?: number;
-  schedule: EconomicReleaseSchedule;
-  /** Narwhal's permanent ID for the release series, shared by every edition; null for a series not yet classified. */
+  /** Increases each time the release's details change; 0 when never revised. */
+  revision: number;
   series_id?: string;
-  /** Which edition of the period's figures this release is. */
   stage?: ReleaseStage;
   status: ReleaseStatus;
-  /** The publisher's own title, in its own language. */
-  title: string;
-  /** What the series measures, the same across countries; null when not yet classified. New topics may be added. */
+  timezone?: string;
   topic?: ReleaseTopic;
-  variant?: string;
+  /** The published figures; always present, empty until publication. */
+  values: Array<EconomicReleaseValue>;
+  /** The immutable version of this release; pass it back as `version_id`. */
   version: string;
   readonly meta: ResponseMeta;
 }
-export interface EconomicReleaseIndicator {
+export interface EconomicReleaseSummary {
+  /** Exact release time, in UTC. */
+  at?: string;
+  /** Inclusive range of possible days. */
+  between?: Array<string>;
+  /** Latest possible release day. */
+  by?: string;
+  country: string;
+  /** Release day when no time is set. */
+  date?: string;
+  family: EconomicFamily;
+  name: string;
+  /** Source terms the publisher requires with each access (for example the ECB). Show it with the release. */
+  notice?: string;
+  period?: string;
+  release_id: string;
+  /** Increases each time the release's details change; 0 when never revised. */
+  revision: number;
+  series_id?: string;
+  stage?: ReleaseStage;
+  status: ReleaseStatus;
+  timezone?: string;
+  topic?: ReleaseTopic;
+  /** The published figures; always present, empty until publication. */
+  values: Array<EconomicReleaseValue>;
+}
+export interface EconomicReleaseValue {
   actual?: Decimal;
-  /** Known actual-value vintage: publisher timestamp when available, otherwise the first accepted capture of that value. */
-  actual_as_of?: string;
-  /** Always present; stored values without it are not annualized. */
-  annualization?: Annualization;
-  /** ISO 4217 code of a money amount; present exactly when unit is currency. */
+  /** True when the figure is at an annual rate; absent means not annualized. */
+  annualized?: boolean;
   currency?: string;
   index_base?: string;
   measure: string;
-  period: string;
+  /** True when the figure is not seasonally adjusted; absent means adjusted. */
+  not_seasonally_adjusted?: boolean;
+  /** The period for this value, included only when it differs from the release's `period` (for example, continuing claims cover the week before). */
+  period?: string;
   previous?: Decimal;
-  /** Known prior-value vintage: publisher timestamp when available, otherwise the first accepted capture of that value. It is distinct from the observation period. */
-  previous_as_of?: string;
-  previous_before_revision?: Decimal;
-  previous_period: string;
-  /** Scale a money amount is printed at; present exactly when unit is currency. */
-  scale?: ValueScale;
-  seasonal_adjustment: SeasonalAdjustment;
-  title: string;
-  transformation: ValueTransformation;
+  /** The earlier figure for `previous`, when this release revised it. */
+  previous_revised_from?: Decimal;
+  scale?: string;
+  /** How the figure is derived (for example `year_over_year`); absent for a level. */
+  transformation?: string;
   unit: IndicatorUnit;
-  value_status: IndicatorValueStatus;
-}
-export interface EconomicReleaseSchedule {
-  at?: string;
-  date?: string;
-  /** The release day in the publisher's own time zone; an exact time in UTC can fall on the day before or after. */
-  local_date?: string;
-  precision: SchedulePrecision;
-  /** How an exact time is known: the publisher's dated calendar entry, or the publisher's documented standard release time applied to a date-only entry. */
-  time_basis?: ScheduleTimeBasis;
-  timezone?: string;
-  until?: string;
-  /** Inclusive range end, or latest possible release date for deadline precision; a deadline does not specify the actual release day. */
-  until_date?: string;
+  /** Present only when `actual` is missing: `pending_capture` (published, not captured yet) or `unavailable` (published or cancelled without this figure). Absent otherwise. */
+  value_status?: EconomicReleaseValueValueStatus;
 }
 export interface EventDetail {
-  event: DeliveryEvent;
-  status?: string;
+  country: string;
+  cursor: string;
+  event_id: string;
+  family: DeliveryFamily;
+  /** Holiday events only. */
+  holiday_generation?: number;
+  /** Holiday events only. */
+  holiday_year?: number;
+  recorded_at: string;
+  /** The release, on release events. */
+  release_id?: string;
+  /** The changed resource. Left out on release events, which carry `release_id`. */
+  resource_id?: string;
+  /** Version of the changed resource: the `version_id` used to read that version of the data. */
+  resource_version?: string;
+  type: string;
   readonly meta: ResponseMeta;
 }
 export interface EventsPage {
   cursor: string;
   events: Array<DeliveryEvent>;
   next_cursor?: string;
-  status?: string;
   readonly meta: ResponseMeta;
 }
-export interface ExtremeBody {
-  down: Array<ExtremeLevel>;
-  observation: ExtremeObservation;
-  up: Array<ExtremeLevel>;
-  window: ExtremeWindow;
-}
 export interface ExtremeEvent {
+  /** When the venues were last checked. */
   as_of?: string;
-  body: ExtremeBody;
   closes_at?: string;
+  down: Array<ExtremeLevel>;
   event_id: string;
-  quality: PredictionQuality;
+  observation: ExtremeObservation;
   question: string;
-  /** Economic calendar release this market resolves on, only when Narwhal publishes that release; otherwise null. */
+  /** Economic calendar release this market resolves on, only when Narwhal publishes that release. */
   release_id?: string;
-  resolution: PredictionResolution;
+  resolution: string;
   resolves_at?: string;
-  shape: string;
+  /** Narwhal endpoint that publishes the official value; not part of this API. */
+  resolves_with?: string;
+  /** The venues' results with each market's outcome, on settled and void events once this plan may see them: Free from the next day, Basic and Pro at once. */
+  result?: PredictionResult;
+  /** Sent on upcoming, trading and closed events. On upcoming and trading events, true after more than 3 minutes without a venue check or when the stored snapshot was already stale. On those events, more than 30 minutes without a venue check or a missing check time means no_live_quotes. A stored no_live_quotes snapshot also applies to closed events. With no_live_quotes, no probabilities are sent, every `quotes` list is empty and every venue is excluded. The exclusion reason is stale unless the venue already has another reason. Closed events are stale only when their stored snapshot was already stale; elapsed time never makes them stale. Do not trade on stale events. Absent on settled and void events. */
+  stale?: boolean;
   status: PredictionEventStatus;
   topic_id: string;
+  /** Combined unit text such as usd_per_barrel. */
   unit?: string;
+  up: Array<ExtremeLevel>;
   venues: Array<PredictionVenue>;
+  window: ExtremeWindow;
   readonly meta: ResponseMeta;
 }
 export interface ExtremeLevel {
@@ -632,14 +622,14 @@ export interface FxBars {
   bars: Array<FxBar>;
   base: string;
   currency: string;
-  end: string;
-  interval: BarInterval;
+  /** Sent only when the plan cut the requested end: the exclusive end served. */
+  end?: string;
   next_cursor?: string;
-  start: string;
+  /** Sent only when the plan raised the requested start: the first instant served. */
+  start?: string;
   readonly meta: ResponseMeta;
 }
 export interface FxConversion {
-  amount: Decimal;
   converted: Decimal;
   from: string;
   market_session: MarketSession;
@@ -659,11 +649,12 @@ export interface FxHistoricalRate {
 }
 export interface FxHistory {
   base: string;
-  end_date: string;
-  has_more: boolean;
+  /** Sent only when the plan cut the requested end date to the last finished day. */
+  end_date?: string;
   next_cursor?: string;
   observations: Array<FxHistoricalObservation>;
-  start_date: string;
+  /** Sent only when the plan raised the requested start date. */
+  start_date?: string;
   readonly meta: ResponseMeta;
 }
 export interface FxRate {
@@ -679,72 +670,137 @@ export interface FxRates {
   readonly meta: ResponseMeta;
 }
 export interface Gdp {
-  annualization: Annualization;
+  /** Present, as true, only when the figures are annualized. */
+  annualized?: boolean;
   country: string;
   currency: string;
+  /** Present, as true, only when the figures are not seasonally adjusted. */
+  not_seasonally_adjusted?: boolean;
   period: string;
-  price_basis: string;
   released_on: string;
-  seasonal_adjustment: SeasonalAdjustment;
   /** Present only when a distributor, not the original publisher, supplies the data. */
   source?: SeriesSource;
   value: Decimal;
   readonly meta: ResponseMeta;
 }
 export interface GdpGrowth {
-  annualization: Annualization;
+  /** Present, as true, only when the figures are annualized. */
+  annualized?: boolean;
   country: string;
+  /** Present, as true, only when the figures are not seasonally adjusted. */
+  not_seasonally_adjusted?: boolean;
   period: string;
-  price_basis: string;
+  /** Real change on the previous quarter, in percent. */
   quarter_over_quarter: Decimal;
-  quarter_over_quarter_seasonal_adjustment?: SeasonalAdjustment;
+  /** Present, as true, only when this country mixes bases and the quarter-over-quarter figure is not seasonally adjusted. */
+  quarter_over_quarter_not_seasonally_adjusted?: boolean;
   released_on: string;
-  seasonal_adjustment: GrowthSeasonalAdjustment;
   /** Present only when a distributor, not the original publisher, supplies the data. */
   source?: SeriesSource;
-  unit: string;
+  /** Real change on the same quarter a year earlier, in percent. */
   year_over_year: Decimal;
-  year_over_year_seasonal_adjustment?: SeasonalAdjustment;
+  /** Present, as true, only when this country mixes bases and the year-over-year figure is not seasonally adjusted. */
+  year_over_year_not_seasonally_adjusted?: boolean;
+  /** Real change of the year so far, in percent. Left out where the publisher releases none. */
   year_to_date?: Decimal;
   readonly meta: ResponseMeta;
 }
-export interface HistoricalEconomicsResponse {
-  /** Official source snapshot timestamp retained by Narwhal. */
+export interface GdpGrowthHistory {
+  /** Present, as true, only when the figures are annualized. */
+  annualized?: boolean;
+  /** When the source last updated the newest observation on this page. */
   as_of?: string;
+  country: string;
   next_cursor?: string;
-  observations: Array<HistoricalObservation>;
+  /** Present, as true, only when the figures are not seasonally adjusted. */
+  not_seasonally_adjusted?: boolean;
+  observations: Array<GdpGrowthHistoryObservation>;
+  /** Present, as true, only when this country mixes bases and the quarter-over-quarter figure is not seasonally adjusted. */
+  quarter_over_quarter_not_seasonally_adjusted?: boolean;
   /** Present only when a distributor, not the original publisher, supplies the data. */
   source?: SeriesSource;
+  /** The start of the plan window, present only when the plan raised the requested start. Earlier periods are not served. */
+  start?: string;
+  /** Present, as true, only when this country mixes bases and the year-over-year figure is not seasonally adjusted. */
+  year_over_year_not_seasonally_adjusted?: boolean;
   readonly meta: ResponseMeta;
 }
-export interface HistoricalObservation {
-  country: string;
-  measure: string;
+export interface GdpGrowthHistoryObservation {
   period: string;
-  transformation: string;
-  unit: string;
+  /** Real change on the previous quarter, in percent. */
+  quarter_over_quarter?: Decimal;
+  /** Real change on the same quarter a year earlier, in percent. */
+  year_over_year?: Decimal;
+  /** Real change of the year so far, in percent. Left out where the publisher releases none. */
+  year_to_date?: Decimal;
+}
+export interface GdpHistory {
+  /** Present, as true, only when the figures are annualized. */
+  annualized?: boolean;
+  /** When the source last updated the newest observation on this page. */
+  as_of?: string;
+  country: string;
+  currency: string;
+  next_cursor?: string;
+  /** Present, as true, only when the figures are not seasonally adjusted. */
+  not_seasonally_adjusted?: boolean;
+  observations: Array<GdpHistoryObservation>;
+  /** Present only when a distributor, not the original publisher, supplies the data. */
+  source?: SeriesSource;
+  /** The start of the plan window, present only when the plan raised the requested start. Earlier periods are not served. */
+  start?: string;
+  readonly meta: ResponseMeta;
+}
+export interface GdpHistoryObservation {
+  period: string;
   value: Decimal;
 }
 export interface Inflation {
   country: string;
+  /** Change on the previous month, in percent. */
   month_over_month: Decimal;
   period: string;
   released_on: string;
   /** Present only when a distributor, not the original publisher, supplies the data. */
   source?: SeriesSource;
-  unit: string;
+  /** Change on the same month a year earlier, in percent. */
   year_over_year: Decimal;
+  /** Change since December of the previous year, in percent. Left out where the publisher releases none. */
   year_to_date?: Decimal;
   readonly meta: ResponseMeta;
+}
+export interface InflationHistory {
+  /** When the source last updated the newest observation on this page. */
+  as_of?: string;
+  country: string;
+  next_cursor?: string;
+  observations: Array<InflationHistoryObservation>;
+  /** Present only when a distributor, not the original publisher, supplies the data. */
+  source?: SeriesSource;
+  /** The start of the plan window, present only when the plan raised the requested start. Earlier periods are not served. */
+  start?: string;
+  readonly meta: ResponseMeta;
+}
+export interface InflationHistoryObservation {
+  /** Change on the previous month, in percent. */
+  month_over_month?: Decimal;
+  period: string;
+  /** Change on the same month a year earlier, in percent. */
+  year_over_year?: Decimal;
+  /** Change since December of the previous year, in percent. Left out where the publisher releases none. */
+  year_to_date?: Decimal;
 }
 export interface LabourForceParticipation {
   country: string;
   period: string;
+  /** The rate, in percent. */
   rate: Decimal;
   released_on: string;
   /** Present only when a distributor, not the original publisher, supplies the data. */
   source?: SeriesSource;
-  unit: string;
+  readonly meta: ResponseMeta;
+}
+export interface NoContent {
   readonly meta: ResponseMeta;
 }
 export interface PalmoilFfbMarketHistory {
@@ -832,8 +888,8 @@ export interface PalmoilScalarPrice {
 }
 export interface PalmoilScalarSeries {
   readonly kind: "PalmoilScalarSeries";
+  /** Regional scope. Left out for a national series. */
   area?: string;
-  commodity: string;
   country: string;
   coverage_end: string;
   coverage_start: string;
@@ -875,8 +931,8 @@ export interface PalmoilSchedulePrice {
 }
 export interface PalmoilScheduleSeries {
   readonly kind: "PalmoilScheduleSeries";
+  /** Regional scope. Left out for a national series. */
   area?: string;
-  commodity: string;
   country: string;
   coverage_end: string;
   coverage_start: string;
@@ -885,8 +941,8 @@ export interface PalmoilScheduleSeries {
   observation_type: string;
   period_type: string;
   price_type: string;
+  /** Left out when the source names no arrangement. */
   producer_arrangement?: ProducerArrangement;
-  producer_type: string;
   product: string;
   series_id: string;
   unit: string;
@@ -897,11 +953,12 @@ export interface PalmoilSeriesDiscovery {
   readonly meta: ResponseMeta;
 }
 export interface PhysicalLatest {
-  attribution?: string;
+  attribution: string;
   currency: string;
   period_end: string;
   period_start: string;
   price: Decimal;
+  /** Publication date. Left out when the source gives none. */
   published_on?: string;
   revision: number;
   series_id: string;
@@ -913,11 +970,12 @@ export interface PhysicalObservation {
   period_end: string;
   period_start: string;
   price: Decimal;
+  /** Publication date. Left out when the source gives none. */
   published_on?: string;
   revision: number;
 }
 export interface PhysicalObservations {
-  attribution?: string;
+  attribution: string;
   currency: string;
   next_cursor?: string;
   observations: Array<PhysicalObservation>;
@@ -927,20 +985,21 @@ export interface PhysicalObservations {
   readonly meta: ResponseMeta;
 }
 export interface PhysicalSeries {
+  /** Regional scope. Left out for a national or world series. */
   area?: string;
-  attribution?: string;
+  attribution: string;
+  /** Price definition. Left out when the source gives none. */
   basis?: string;
   category: PhysicalCategory;
   commodity: string;
+  country: string;
   coverage_end: string;
   coverage_start: string;
   currency: string;
   description: string;
   frequency: PhysicalFrequency;
-  market: string;
   price_type: PhysicalPriceType;
   product: string;
-  publisher: string;
   series_id: string;
   unit: string;
   unit_quantity: Decimal;
@@ -953,21 +1012,16 @@ export interface PhysicalSeriesPage {
 }
 export interface PolicyPath {
   as_of?: string;
-  authority: CentralBank;
   meetings: Array<PolicyPathMeeting>;
-  method: string;
-  unit: string;
   readonly meta: ResponseMeta;
 }
 export interface PolicyPathDay {
   date: string;
-  meetings: Array<PolicyPathMeeting>;
+  meetings: Array<PolicyPathOdds>;
 }
 export interface PolicyPathHistory {
-  authority: CentralBank;
   days: Array<PolicyPathDay>;
-  method: string;
-  unit: string;
+  meeting_dates: Array<PolicyPathMeetingDate>;
   readonly meta: ResponseMeta;
 }
 export interface PolicyPathMeeting {
@@ -979,22 +1033,35 @@ export interface PolicyPathMeeting {
   p_hold: string;
   resolves_at?: string;
 }
+export interface PolicyPathMeetingDate {
+  event_id: string;
+  resolves_at?: string;
+}
+export interface PolicyPathOdds {
+  cumulative_change_bps: Decimal;
+  event_id: string;
+  expected_change_bps: Decimal;
+  p_cut: string;
+  p_hike: string;
+  p_hold: string;
+}
 export interface PredictionBar {
   close: string;
-  end: string;
   high?: string;
   low?: string;
   open?: string;
-  start: string;
+  /** Start of the bar. */
+  timestamp: string;
 }
 export interface PredictionEventSummary {
-  as_of?: string;
   closes_at?: string;
   event_id: string;
   question: string;
-  /** Economic calendar release this market resolves on, only when Narwhal publishes that release; otherwise null. */
+  /** Economic calendar release this market resolves on, only when Narwhal publishes that release. */
   release_id?: string;
   resolves_at?: string;
+  /** The venues' results, on settled and void events once this plan may see them: Free from the next day, Basic and Pro at once. */
+  result?: PredictionResultSummary;
   shape: PredictionShape;
   status: PredictionEventStatus;
   topic_id: string;
@@ -1005,88 +1072,129 @@ export interface PredictionEventsPage {
   readonly meta: ResponseMeta;
 }
 export interface PredictionHistory {
+  /** The venue whose market a chart line comes from before capture started. */
   backfill_venue?: Venue;
-  /** First minute Narwhal captured; earlier bars are venue backfill (close only). */
-  captured_from?: string;
-  end: string;
-  event_id: string;
-  interval: PredictionInterval;
-  /** Present when the window continues: pass it as cursor, with the same start, end and interval, for the next page. A page holds about 5,000 bars. */
+  /** Sent only when the plan cut the requested window short: the last instant the answer can cover. */
+  end?: string;
+  /** Always sent; null on the last page. Otherwise pass it as cursor, with the same start, end and interval, for the next page. A page holds about 5,000 bars. */
   next_cursor?: string;
   series: Array<PredictionSeries>;
-  shape: PredictionShape;
-  start: string;
   readonly meta: ResponseMeta;
 }
-export interface PredictionQuality {
-  freshness: QuoteFreshness;
-  monotone_repairs: number;
-  rows_merged: number;
+export interface PredictionResult {
+  /** When Narwhal found that the outcome or value of a final result had changed. Sent only if it did. */
+  amended_at?: string;
+  /** True when every venue's result is final. */
+  final: boolean;
+  /** Latest available venue settlement time, sent once every venue has a result row or is marked unavailable, whether final or not. Omitted if no settlement time exists. */
+  settled_at?: string;
+  venues: Array<PredictionResultVenue>;
 }
-export interface PredictionResolution {
-  description: string;
-  /** Narwhal endpoint that publishes the official value; not part of this API. */
-  resolves_with?: string;
+export interface PredictionResultMarket {
+  /** Kalshi market ticker or Polymarket market id. */
+  market_id: string;
+  /** Kalshi: yes, no, void or scalar. Polymarket: the winning outcome's label, split for a 50-50 resolution, custom for a custom payout, or unresolved. */
+  outcome: string;
+  /** Kalshi: the YES settlement price in dollars (yes 1, no 0). Polymarket: the winning outcome's final price (1 for a clean win; the top payout for split and custom). Read it with the outcome. Null when the venue gives none. */
+  value?: Decimal;
+}
+export interface PredictionResultSummary {
+  /** When Narwhal found that the outcome or value of a final result had changed. Sent only if it did. */
+  amended_at?: string;
+  /** True when every venue's result is final. */
+  final: boolean;
+  /** Latest available venue settlement time, sent once every venue has a result row or is marked unavailable, whether final or not. Omitted if no settlement time exists. */
+  settled_at?: string;
+}
+export interface PredictionResultVenue {
+  /** When Narwhal found that the outcome or value of a final result had changed (a dispute or amendment). Sent only if it did. */
+  amended_at?: string;
+  /** True once the venue has finalized the result. A result the venue has determined but not finalized can still change. */
+  final?: boolean;
+  markets: Array<PredictionResultMarket>;
+  /** When the venue settled the market. */
+  settled_at?: string;
+  /** Sent only when true: the venue has removed this event's markets and Narwhal holds no result for them. Such a venue does not hold the event's final open. */
+  unavailable?: boolean;
+  venue: Venue;
 }
 export interface PredictionSeries {
   active_from: string;
+  /** Sent only once the series has ended. */
   active_to?: string;
   bars: Array<PredictionBar>;
   key: string;
 }
 export interface PredictionTopic {
+  /** The calendar release family this topic follows, when it follows one. */
   calendar?: TopicCalendar;
   group: TopicGroup;
+  /** The first open event of the topic, when there is one. */
   next_event_id?: string;
   resolution_kind: ResolutionKind;
   shape: PredictionShape;
   title: string;
   topic_id: string;
+  /** Combined unit text such as usd_per_barrel. */
   unit?: string;
   venues: Array<Venue>;
 }
 export interface PredictionTopicDetail {
+  /** The calendar release family this topic follows, when it follows one. */
   calendar?: TopicCalendar;
-  /** Upcoming and trading events, then the five most recent closed ones. */
-  events: Array<PredictionEventSummary>;
+  /** Upcoming and trading events, then the five most recent non-open events (closed, settled or void), ordered by resolution time. */
+  events: Array<PredictionTopicEvent>;
   group: TopicGroup;
-  next_event_id?: string;
   resolution_kind: ResolutionKind;
   shape: PredictionShape;
   title: string;
   topic_id: string;
+  /** Combined unit text such as usd_per_barrel. */
   unit?: string;
   venues: Array<Venue>;
   readonly meta: ResponseMeta;
+}
+export interface PredictionTopicEvent {
+  closes_at?: string;
+  event_id: string;
+  question: string;
+  /** Economic calendar release this market resolves on, only when Narwhal publishes that release. */
+  release_id?: string;
+  resolves_at?: string;
+  /** The venues' results, on settled and void events once this plan may see them: Free from the next day, Basic and Pro at once. */
+  result?: PredictionResultSummary;
+  status: PredictionEventStatus;
 }
 export interface PredictionTopics {
   topics: Array<PredictionTopic>;
   readonly meta: ResponseMeta;
 }
 export interface PredictionVenue {
-  /** Money at risk resting within 5 cents of mid on both sides, from the full order book; each contract counts at the smaller of its price and one minus it. */
-  depth_usd?: Decimal;
+  /** Sent only for a venue left out of the probabilities. */
   excluded_reason?: VenueExclusionReason;
-  fetched_at?: string;
-  match: VenueMatch;
+  /** How this venue's market differs from the event; sent only when it does. */
+  match?: VenueMatch;
   open_interest_usd?: Decimal;
-  role: QuoteRole;
   /** The venue's own resolution rules, capped at 2,000 characters. */
   rules_text?: string;
   rules_url?: string;
-  settlement: VenueSettlement;
+  /** Sent once the venue has settled or voided its market. */
+  settlement?: PredictionVenueSettlement;
   settlement_source?: string;
   url: string;
   venue: Venue;
-  venue_event_id: string;
   volume_24h_usd?: Decimal;
+  /** Sent only for a blended venue. */
   weight?: string;
 }
 export interface PredictionWebhookEvent {
+  /** Left out when not set. */
   closes_at?: string;
-  event_id: string;
-  /** Calendar release, only when the public calendar serves it. */
+  /** The prediction market ID, returned as `event_id` by the prediction routes. The outer `event_id` identifies the delivery. */
+  prediction_event_id: string;
+  /** Calendar release, sent only when the public calendar serves it. */
   release_id?: string;
+  /** Left out when not set. */
   resolves_at?: string;
   settlements: Array<PredictionWebhookSettlement>;
   shape: PredictionShape;
@@ -1101,8 +1209,6 @@ export interface Problem {
   /** Stable machine-readable error code. Documented values are listed in `x-narwhal-codes`; the list may grow, so treat an unknown code by its HTTP status. */
   code: string;
   detail: string;
-  instance?: string;
-  ok?: boolean;
   request_id: string;
   status: number;
   title: string;
@@ -1112,8 +1218,24 @@ export interface Quote {
   /** Venue market ids behind this row: Kalshi tickers or Polymarket YES token ids. */
   market_ids: Array<string>;
   probability: string;
-  role: QuoteRole;
   venue: Venue;
+}
+export interface RateHistory {
+  /** When the source last updated the newest observation on this page. */
+  as_of?: string;
+  country: string;
+  next_cursor?: string;
+  observations: Array<RateHistoryObservation>;
+  /** Present only when a distributor, not the original publisher, supplies the data. */
+  source?: SeriesSource;
+  /** The start of the plan window, present only when the plan raised the requested start. Earlier periods are not served. */
+  start?: string;
+  readonly meta: ResponseMeta;
+}
+export interface RateHistoryObservation {
+  period: string;
+  /** The rate, in percent. */
+  rate: Decimal;
 }
 export interface ResourceHistory {
   country: string;
@@ -1132,25 +1254,31 @@ export interface ResourceObservation {
   status?: ResourceObservationStatus;
   value: Decimal;
 }
-export interface ScalarBody {
-  outcomes: Array<ScalarOutcome>;
-  scale: number;
-  summary?: ScalarSummary;
-}
 export interface ScalarEvent {
+  /** Which of median, p10 and p90 sit in the open top row; the value is then that row's lower bound. Empty when none does. */
+  above: Array<ScalarEventAbove>;
+  /** When the venues were last checked. */
   as_of?: string;
-  body: ScalarBody;
   closes_at?: string;
   event_id: string;
-  quality: PredictionQuality;
+  median?: Decimal;
+  outcomes: Array<ScalarOutcome>;
+  p10?: Decimal;
+  p90?: Decimal;
   question: string;
-  /** Economic calendar release this market resolves on, only when Narwhal publishes that release; otherwise null. */
+  /** Economic calendar release this market resolves on, only when Narwhal publishes that release. */
   release_id?: string;
-  resolution: PredictionResolution;
+  resolution: string;
   resolves_at?: string;
-  shape: string;
+  /** Narwhal endpoint that publishes the official value; not part of this API. */
+  resolves_with?: string;
+  /** The venues' results with each market's outcome, on settled and void events once this plan may see them: Free from the next day, Basic and Pro at once. */
+  result?: PredictionResult;
+  /** Sent on upcoming, trading and closed events. On upcoming and trading events, true after more than 3 minutes without a venue check or when the stored snapshot was already stale. On those events, more than 30 minutes without a venue check or a missing check time means no_live_quotes. A stored no_live_quotes snapshot also applies to closed events. With no_live_quotes, no probabilities are sent, every `quotes` list is empty and every venue is excluded. The exclusion reason is stale unless the venue already has another reason. Closed events are stale only when their stored snapshot was already stale; elapsed time never makes them stale. Do not trade on stale events. Absent on settled and void events. */
+  stale?: boolean;
   status: PredictionEventStatus;
   topic_id: string;
+  /** Combined unit text such as usd_per_barrel. */
   unit?: string;
   venues: Array<PredictionVenue>;
   readonly meta: ResponseMeta;
@@ -1158,51 +1286,41 @@ export interface ScalarEvent {
 export interface ScalarOutcome {
   key: string;
   label: string;
+  /** Null means an open lower tail. */
   lower?: Decimal;
   probability?: string;
   quotes: Array<Quote>;
+  /** Null means an open upper tail. */
   upper?: Decimal;
-}
-export interface ScalarSummary {
-  /** A value marked 'above' falls in the open top row; the value is that row's lower bound. */
-  bounds?: ScalarSummaryBounds;
-  median?: Decimal;
-  method: string;
-  p10?: Decimal;
-  p90?: Decimal;
-}
-export interface ScalarSummaryBounds {
-  median?: string;
-  p10?: string;
-  p90?: string;
 }
 export interface SeriesSource {
   /** Organisation that distributes the statistic. */
   distributor: string;
   /** Original publisher named by the distributor. */
   publisher: string;
-  /** released_on is the distributor's publication date for this data, not the original publisher's release date. */
-  released_on_basis: string;
-}
-export interface TimingBody {
-  /** Derived: 1 minus the last step. */
-  not_within_window?: string;
-  steps: Array<TimingStep>;
 }
 export interface TimingEvent {
+  /** When the venues were last checked. */
   as_of?: string;
-  body: TimingBody;
   closes_at?: string;
   event_id: string;
-  quality: PredictionQuality;
+  /** Derived: 1 minus the last step. */
+  not_within_window?: string;
   question: string;
-  /** Economic calendar release this market resolves on, only when Narwhal publishes that release; otherwise null. */
+  /** Economic calendar release this market resolves on, only when Narwhal publishes that release. */
   release_id?: string;
-  resolution: PredictionResolution;
+  resolution: string;
   resolves_at?: string;
-  shape: string;
+  /** Narwhal endpoint that publishes the official value; not part of this API. */
+  resolves_with?: string;
+  /** The venues' results with each market's outcome, on settled and void events once this plan may see them: Free from the next day, Basic and Pro at once. */
+  result?: PredictionResult;
+  /** Sent on upcoming, trading and closed events. On upcoming and trading events, true after more than 3 minutes without a venue check or when the stored snapshot was already stale. On those events, more than 30 minutes without a venue check or a missing check time means no_live_quotes. A stored no_live_quotes snapshot also applies to closed events. With no_live_quotes, no probabilities are sent, every `quotes` list is empty and every venue is excluded. The exclusion reason is stale unless the venue already has another reason. Closed events are stale only when their stored snapshot was already stale; elapsed time never makes them stale. Do not trade on stale events. Absent on settled and void events. */
+  stale?: boolean;
   status: PredictionEventStatus;
+  steps: Array<TimingStep>;
   topic_id: string;
+  /** Combined unit text such as usd_per_barrel. */
   unit?: string;
   venues: Array<PredictionVenue>;
   readonly meta: ResponseMeta;
@@ -1220,44 +1338,31 @@ export interface TimingStep {
 export interface TopicCalendar {
   country: string;
   family: string;
-  variant?: string;
 }
-export interface TradeExports {
+export interface TradeHistory {
+  /** When the source last updated the newest observation on this page. */
+  as_of?: string;
   country: string;
-  coverage: string;
   currency: string;
-  flow: string;
-  partner?: string;
-  period: string;
-  product?: TradeProductFilter;
-  released_on: string;
+  next_cursor?: string;
+  observations: Array<TradeHistoryObservation>;
   /** Present only when a distributor, not the original publisher, supplies the data. */
   source?: SeriesSource;
-  value: Decimal;
+  /** The start of the plan window, present only when the plan raised the requested start. Earlier periods are not served. */
+  start?: string;
   readonly meta: ResponseMeta;
 }
-export interface TradeImports {
-  country: string;
-  coverage: string;
-  currency: string;
-  flow: string;
-  partner?: string;
+export interface TradeHistoryObservation {
+  /** Merchandise exports in the period. */
+  exports?: Decimal;
+  /** Merchandise imports in the period. */
+  imports?: Decimal;
   period: string;
-  product?: TradeProductFilter;
-  released_on: string;
-  /** Present only when a distributor, not the original publisher, supplies the data. */
-  source?: SeriesSource;
-  value: Decimal;
-  readonly meta: ResponseMeta;
-}
-export interface TradeProductFilter {
-  classification: string;
-  code: string;
 }
 export interface TradeSummary {
+  /** Exports minus imports. */
   balance: Decimal;
   country: string;
-  coverage: string;
   currency: string;
   exports: Decimal;
   imports: Decimal;
@@ -1270,38 +1375,27 @@ export interface TradeSummary {
 export interface Unemployment {
   country: string;
   period: string;
+  /** The rate, in percent. */
   rate: Decimal;
   released_on: string;
   /** Present only when a distributor, not the original publisher, supplies the data. */
   source?: SeriesSource;
-  unit: string;
   readonly meta: ResponseMeta;
 }
 export interface VenueMatch {
   differences: Array<VenueDifference>;
   note?: string;
 }
-export interface VenueSettlement {
-  status: SettlementStatus;
-}
 export interface WebhookConfigurationHistory {
-  activation_snapshot: string;
+  config_version: number;
   countries: Array<string>;
-  destination_id: string;
   enabled: boolean;
   families: Array<WebhookFamily>;
   recorded_at: string;
   url: string;
-  version: number;
-}
-export interface WebhookDeleteResponse {
-  deleted?: boolean;
-  destination_id: string;
-  readonly meta: ResponseMeta;
 }
 export interface WebhookDeliveriesResponse {
   deliveries: Array<WebhookDelivery>;
-  limit: number;
   next_cursor?: string;
   readonly meta: ResponseMeta;
 }
@@ -1310,13 +1404,20 @@ export interface WebhookDelivery {
   config_version: number;
   created_at: string;
   delivery_id: string;
+  /** Position of the event in `GET /v1/events`. Left out on test deliveries. */
   event_cursor?: number;
+  /** Sent only for a test delivery. */
   is_test?: boolean;
+  /** Why the last attempt failed. */
   last_error?: string;
+  /** HTTP status of the last attempt. */
   last_status?: number;
-  next_attempt_at: string;
-  replays: number;
-  retry_until: string;
+  /** Sent only while the delivery is `pending` or `leased`. */
+  next_attempt_at?: string;
+  /** Sent only when greater than 0. */
+  replays?: number;
+  /** Sent only while the delivery is `pending` or `leased`. */
+  retry_until?: string;
   state: WebhookDeliveryState;
   updated_at: string;
 }
@@ -1325,7 +1426,7 @@ export interface WebhookDestinationCreated {
   countries: Array<string>;
   created_at: string;
   destination_id: string;
-  /** Why a destination is not enabled: `customer` (switched off by the account) or `plan_limit` (paused because the plan no longer includes it). Null when enabled. */
+  /** Why a destination is not enabled: `customer` (switched off by the account) or `plan_limit` (paused because the plan no longer includes it). Left out when enabled. */
   disabled_reason?: WebhookDisabledReason;
   enabled: boolean;
   families: Array<WebhookFamily>;
@@ -1343,8 +1444,8 @@ export interface WebhookDestinationInput {
   url: string;
 }
 export interface WebhookDestinationList {
+  destination_limit: number;
   destinations: Array<WebhookDestinationResponse>;
-  limit: number;
   readonly meta: ResponseMeta;
 }
 export interface WebhookDestinationResponse {
@@ -1352,7 +1453,7 @@ export interface WebhookDestinationResponse {
   countries: Array<string>;
   created_at: string;
   destination_id: string;
-  /** Why a destination is not enabled: `customer` (switched off by the account) or `plan_limit` (paused because the plan no longer includes it). Null when enabled. */
+  /** Why a destination is not enabled: `customer` (switched off by the account) or `plan_limit` (paused because the plan no longer includes it). Left out when enabled. */
   disabled_reason?: WebhookDisabledReason;
   enabled: boolean;
   families: Array<WebhookFamily>;
@@ -1365,15 +1466,16 @@ export interface WebhookEvent {
   country?: string;
   cursor?: string;
   event_id: string;
-  family?: WebhookFamily;
-  holiday_country?: string;
+  family?: DeliveryFamily;
+  /** Holiday events only. */
   holiday_generation?: number;
+  /** Holiday events only. */
   holiday_year?: number;
-  is_test?: boolean;
   prediction?: PredictionWebhookEvent;
-  publication_id?: string;
   recorded_at: string;
+  /** The release, on release events. */
   release_id?: string;
+  /** Left out on release events, which carry `release_id`. */
   resource_id?: string;
   resource_version?: string;
   schema_version: string;
@@ -1383,14 +1485,10 @@ export interface WebhookHistoryResponse {
   history: Array<WebhookConfigurationHistory>;
   readonly meta: ResponseMeta;
 }
-export interface WebhookReplayResponse {
-  delivery_id: string;
-  replayed: boolean;
-  readonly meta: ResponseMeta;
-}
 export interface WebhookTestResponse {
+  /** Left out when nothing was queued. */
   delivery_id?: string;
-  destination_id: string;
+  /** Sent when rate limited. */
   retry_after_seconds?: number;
   status: WebhookTestStatus;
   readonly meta: ResponseMeta;

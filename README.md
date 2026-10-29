@@ -1,7 +1,7 @@
 # Narwhal API for TypeScript
 
-A typed server-side client for economic indicators, foreign exchange, calendars,
-physical palm oil prices, physical commodity reference prices, spot gold and silver, prediction markets, FX and commodity bar history, and webhook delivery. Decimal values retain their exact wire text.
+A typed server-side client for economic indicators (including the equity risk premium), foreign exchange, calendars,
+stocks (`equities`), funds, crypto, company calendars (`companyCalendars`), company filings and financials, physical palm oil prices, physical commodity reference prices, spot gold and silver, prediction markets, FX and commodity bar history, and webhook delivery. Decimal values retain their exact wire text.
 
 ```sh
 npm install narwhalapi

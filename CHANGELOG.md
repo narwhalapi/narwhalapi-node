@@ -1,5 +1,63 @@
 # Changelog
 
+## 0.5.0 — 2026-10-29
+
+Type change: FX bar prices use the SDK's `Decimal` type.
+New: stocks, funds, crypto, company calendars, central banks, the Filings API and custom series.
+
+- FX bars: `FxBar.open`, `high`, `low` and `close` are typed `Decimal` instead of `string`,
+  like every other price in the SDK. `Decimal` is a branded string with the exact wire text,
+  so reading these fields works as before.
+  Migrate: if your code assigns a plain string to these fields, cast it or use `Decimal`.
+- History reads: the economics `*_history` methods (`cpiHistory`, `gdpHistory`,
+  `gdpGrowthHistory`, `inflationHistory`, `labourForceParticipationHistory`,
+  `unemploymentHistory`, `tradeHistory`) take optional `as_of` and `version`;
+  `yieldCurveHistory` takes `as_of` only. Observation rows have an optional
+  `first_reported_at`, and `ResourceHistory` has an optional `as_of`.
+- Financials: `FinancialRow.items` skips null item values instead of failing the response.
+- Docs: GDP growth `quarter_over_quarter` says it is not annualized. Paged responses say
+  `next_cursor` is always sent and is `null` on the last page. Holiday years are 1900-2200.
+  Calendar subscription methods list their 401, 404, 429 and 503 errors.
+- Stocks: `client.equities` reads prices (`price`, `prices`), daily bars (`bars`), profiles,
+  dividends, splits, earnings, valuation and its history, movers, search and cost of capital.
+  US listings on NYSE, Nasdaq and NYSE American, and Korea. Ids look like `XNAS:AAPL`.
+- Funds: `client.funds` reads ETF prices and mutual fund NAVs (`price`, `prices`), bars,
+  profiles, distributions and search. `price` answers an ETF or a mutual fund NAV, told apart
+  by `type`.
+- Crypto: `client.crypto` reads pair prices (`price`, `prices`), bars and the pair list
+  (`listPairs`).
+- Company calendars: `client.companyCalendars` lists upcoming `dividends` and `splits`.
+- Central banks: `economics` reads policy rates (`policyRate`, `policyRateHistory`), central
+  bank balance sheets (`centralBankBalanceSheet`) and reserves (`centralBankReserves`). A
+  policy rate is a point rate (`PointPolicyRate`) or a target range (`RangePolicyRate`).
+- Equity risk premium: `economics` reads the premium investors need for a country's shares
+  (Free plan): `listEquityRiskPremium` for every country, `getEquityRiskPremium` for one
+  country (optional `date`) and `equityRiskPremiumHistory` (with `equityRiskPremiumHistoryIter`).
+  `EquityRiskPremium` splits `total_erp` into `mature_erp` and `country_risk_premium`, all in
+  percent as `Decimal`, with a `basis` for each part.
+- Companies: `filings.company` returns `CompanyWithListings`, a company with the stock listing
+  ids (`listings`) you can pass to `client.equities`.
+- Filings API: `client.filings` reads company financials, filings, holders and as-reported
+  statements: `searchCompanies`, `company`, `financials`, `listCompanyFilings`, `filing`,
+  `listLatestFilings`, `listHolders` and `asReported`. Every money, share, percent and ratio
+  value is a `Decimal` with the exact wire text. A `FinancialRow` holds its period fields
+  (`fy`, `fq`, `fh`, `end`, `currency`, `derived`) and all financial items in `row.items`,
+  a `Record<string, Decimal>` such as `row.items.revenue`.
+- Custom series: `economics` can search the series catalogue (`searchCatalogue`), read one series
+  (`readCatalogueSeries`), its observations (`readCatalogueObservations`) and the latest value
+  of several at once (`readCatalogueLatestBatch`). Series ids look like `fred:unrate`.
+  `readSeriesObservations` also takes `asOf` and `version` (Pro plan).
+- Registries: filings cover 31 registries (`usa`, `jpn`, `kor`, `twn`, `gbr` and 26 EU and EEA
+  countries). The UK is covered for UK issuers on regulated markets (annual reports), and `gbr`
+  company ids are LEIs, for example `gbr:549300MKFYEKVRWML317`. Taiwan includes TPEx issuers
+  (listing MIC `ROCO`) besides `XTAI`.
+- Taiwan: filings accept `period: "semiannual"`. Taiwan reports semiannual year-to-date income
+  statements and balance sheets.
+- As-reported statements are available for US filings only; other registries answer
+  `as_reported_unavailable` (404).
+- Webhooks: the new `filings` family and the `companies` watch list on destinations;
+  deliveries for it carry a `filing` record (`FilingWebhookEvent`).
+
 ## 0.4.0 — 2026-10-22
 
 Breaking: 0.3.x fails on calls changed by the API contracts of 21-22 October 2026.

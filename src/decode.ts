@@ -67,6 +67,17 @@ export function readObject(value: unknown): Record<string, unknown> {
   }
   return value as Record<string, unknown>;
 }
+/** The keys of `data` outside `known`, each read as a decimal string. Null values are skipped. */
+export function readDecimalItems(
+  data: Record<string, unknown>,
+  known: readonly string[],
+): Record<string, Decimal> {
+  return Object.fromEntries(
+    Object.entries(data)
+      .filter(([key, value]) => value !== null && !known.includes(key))
+      .map(([key, value]) => [key, readDecimal(value)]),
+  );
+}
 export function readArray(value: unknown): unknown[] {
   if (!Array.isArray(value)) throw new TypeError("Expected an array");
   return value;

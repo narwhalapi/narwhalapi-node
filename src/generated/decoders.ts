@@ -1,11 +1,12 @@
-// Generated from spec/live/openapi.json sha256 ba06d620d3f1f03774f3f30363a59e00f14ab7cde053c552d2164ad83a9ea678. Do not edit.
-// Generated from spec/next/openapi.json sha256 ba06d620d3f1f03774f3f30363a59e00f14ab7cde053c552d2164ad83a9ea678. Do not edit.
+// Generated from spec/live/openapi.json sha256 5071bd97e9507eb56b344d00a24ba056ce1340fe1184faa4d755fe7e407e1cf6. Do not edit.
+// Generated from spec/next/openapi.json sha256 5071bd97e9507eb56b344d00a24ba056ce1340fe1184faa4d755fe7e407e1cf6. Do not edit.
 import {
   optional,
   readArray,
   readBool,
   readCursor,
   readDecimal,
+  readDecimalItems,
   readInt,
   readObject,
   readString,
@@ -14,6 +15,42 @@ import {
 } from "../decode.js";
 import type { ResponseMeta } from "../meta.js";
 import type * as models from "./models.js";
+export function decodeAsReportedConcept(
+  value: unknown,
+): models.AsReportedConcept {
+  const data = readObject(value);
+  return {
+    concept: readString(data.concept),
+    label: optional(data.label, readString),
+    taxonomy: readString(data.taxonomy),
+    unit: readString(data.unit),
+    values: ((value: unknown) =>
+      readArray(value).map((item) => decodeAsReportedValue(item)))(data.values),
+  };
+}
+export function decodeAsReportedPage(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.AsReportedPage {
+  const data = readObject(value);
+  return withMeta(
+    {
+      concepts: ((value: unknown) =>
+        readArray(value).map((item) => decodeAsReportedConcept(item)))(
+        data.concepts,
+      ),
+    },
+    meta,
+  );
+}
+export function decodeAsReportedValue(value: unknown): models.AsReportedValue {
+  const data = readObject(value);
+  return {
+    end: readString(data.end),
+    start: optional(data.start, readString),
+    value: readDecimal(data.value),
+  };
+}
 export function decodeBinaryEvent(
   value: unknown,
   meta: ResponseMeta = {},
@@ -165,6 +202,168 @@ export function decodeCalendarSubscriptionInput(
     start_date: readString(data.start_date),
   };
 }
+export function decodeCatalogueBulkLatest(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CatalogueBulkLatest {
+  const data = readObject(value);
+  return withMeta(
+    {
+      missing: ((value: unknown) =>
+        readArray(value).map((item) => readString(item)))(data.missing),
+      observations: ((value: unknown) =>
+        readArray(value).map((item) => decodeCatalogueLatest(item)))(
+        data.observations,
+      ),
+    },
+    meta,
+  );
+}
+export function decodeCatalogueEntry(value: unknown): models.CatalogueEntry {
+  const data = readObject(value);
+  return {
+    country: optional(data.country, readString),
+    first_period: optional(data.first_period, readString),
+    frequency: optional(data.frequency, readString),
+    id: optional(data.id, readString),
+    id_template: optional(data.id_template, readString),
+    last_period: optional(data.last_period, readString),
+    source: readString(data.source),
+    title: readString(data.title),
+    unit_label: optional(data.unit_label, readString),
+  };
+}
+export function decodeCatalogueHistory(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CatalogueHistory {
+  const data = readObject(value);
+  return withMeta(
+    {
+      attribution: readString(data.attribution),
+      base_period: optional(data.base_period, readString),
+      country: optional(data.country, readString),
+      currency: optional(data.currency, readString),
+      fetched_at: readString(data.fetched_at),
+      frequency: readString(data.frequency),
+      id: readString(data.id),
+      licence_url: readString(data.licence_url),
+      next_cursor: optional(data.next_cursor, readCursor),
+      observations: ((value: unknown) =>
+        readArray(value).map((item) => decodeResourceObservation(item)))(
+        data.observations,
+      ),
+      scale: optional(data.scale, readString),
+      seasonal_adjustment: readString(data.seasonal_adjustment),
+      stale: optional(data.stale, readBool),
+      title: readString(data.title),
+      unit: readString(data.unit),
+      unit_label: readString(data.unit_label),
+    },
+    meta,
+  );
+}
+export function decodeCatalogueLatest(value: unknown): models.CatalogueLatest {
+  const data = readObject(value);
+  return {
+    attribution: readString(data.attribution),
+    base_period: optional(data.base_period, readString),
+    country: optional(data.country, readString),
+    currency: optional(data.currency, readString),
+    fetched_at: readString(data.fetched_at),
+    first_reported_at: optional(data.first_reported_at, readString),
+    frequency: readString(data.frequency),
+    id: readString(data.id),
+    licence_url: readString(data.licence_url),
+    period: readString(data.period),
+    released_on: optional(data.released_on, readString),
+    scale: optional(data.scale, readString),
+    seasonal_adjustment: readString(data.seasonal_adjustment),
+    stale: optional(data.stale, readBool),
+    status: optional(data.status, readString),
+    title: readString(data.title),
+    unit: readString(data.unit),
+    unit_label: readString(data.unit_label),
+    value: readDecimal(data.value),
+  };
+}
+export function decodeCatalogueSearchPage(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CatalogueSearchPage {
+  const data = readObject(value);
+  return withMeta(
+    {
+      next_cursor: optional(data.next_cursor, readCursor),
+      results: ((value: unknown) =>
+        readArray(value).map((item) => decodeCatalogueEntry(item)))(
+        data.results,
+      ),
+    },
+    meta,
+  );
+}
+export function decodeCatalogueSeries(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CatalogueSeries {
+  const data = readObject(value);
+  return withMeta(
+    {
+      attribution: readString(data.attribution),
+      base_period: optional(data.base_period, readString),
+      country: optional(data.country, readString),
+      currency: optional(data.currency, readString),
+      fetched_at: readString(data.fetched_at),
+      first_period: readString(data.first_period),
+      frequency: readString(data.frequency),
+      id: readString(data.id),
+      last_period: readString(data.last_period),
+      licence_url: readString(data.licence_url),
+      scale: optional(data.scale, readString),
+      seasonal_adjustment: readString(data.seasonal_adjustment),
+      stale: optional(data.stale, readBool),
+      title: readString(data.title),
+      unit: readString(data.unit),
+      unit_label: readString(data.unit_label),
+    },
+    meta,
+  );
+}
+export function decodeCentralBankBalanceSheet(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CentralBankBalanceSheet {
+  const data = readObject(value);
+  return withMeta(
+    {
+      country: readString(data.country),
+      currency: readString(data.currency),
+      period: readString(data.period),
+      released_on: readString(data.released_on),
+      scale: readString(data.scale),
+      value: readDecimal(data.value),
+    },
+    meta,
+  );
+}
+export function decodeCentralBankReserves(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CentralBankReserves {
+  const data = readObject(value);
+  return withMeta(
+    {
+      country: readString(data.country),
+      currency: readString(data.currency),
+      period: readString(data.period),
+      released_on: readString(data.released_on),
+      scale: readString(data.scale),
+      value: readDecimal(data.value),
+    },
+    meta,
+  );
+}
 export function decodeCommodityBar(value: unknown): models.CommodityBar {
   const data = readObject(value);
   return {
@@ -221,6 +420,230 @@ export function decodeCommoditySpot(
     meta,
   );
 }
+export function decodeCompanyFilingsPage(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CompanyFilingsPage {
+  const data = readObject(value);
+  return withMeta(
+    {
+      filed_from: optional(data.filed_from, readString),
+      filings: ((value: unknown) =>
+        readArray(value).map((item) => decodeListedFiling(item)))(data.filings),
+      id: readString(data.id),
+      next_cursor: optional(data.next_cursor, readCursor),
+    },
+    meta,
+  );
+}
+export function decodeCompanyIndustry(value: unknown): models.CompanyIndustry {
+  const data = readObject(value);
+  return {
+    industry: optional(data.industry, readString),
+    isic: optional(data.isic, readString),
+    sector: optional(data.sector, readString),
+    source_code: optional(data.source_code, readString),
+    source_scheme: optional(data.source_scheme, readString),
+  };
+}
+export function decodeCompanyNameSpan(value: unknown): models.CompanyNameSpan {
+  const data = readObject(value);
+  return {
+    from: optional(data.from, readString),
+    name: readString(data.name),
+    to: optional(data.to, readString),
+  };
+}
+export function decodeCompanyRelation(value: unknown): models.CompanyRelation {
+  const data = readObject(value);
+  return {
+    id: readString(data.id),
+    kind: readString(data.kind),
+  };
+}
+export function decodeCompanySearchHit(
+  value: unknown,
+): models.CompanySearchHit {
+  const data = readObject(value);
+  return {
+    code: optional(data.code, readString),
+    country: optional(data.country, readString),
+    delisted: optional(data.delisted, readBool),
+    former_code: optional(data.former_code, readBool),
+    former_name: optional(data.former_name, readString),
+    id: readString(data.id),
+    matched: optional(data.matched, readString),
+    mic: optional(data.mic, readString),
+    name: readString(data.name),
+  };
+}
+export function decodeCompanySearchPage(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CompanySearchPage {
+  const data = readObject(value);
+  return withMeta(
+    {
+      companies: ((value: unknown) =>
+        readArray(value).map((item) => decodeCompanySearchHit(item)))(
+        data.companies,
+      ),
+      coverage: optional(data.coverage, (value: unknown) =>
+        readArray(value).map((item) => decodeRegistryCoverage(item)),
+      ),
+    },
+    meta,
+  );
+}
+export function decodeCompanySecurity(value: unknown): models.CompanySecurity {
+  const data = readObject(value);
+  return {
+    adr_ratio: optional(data.adr_ratio, readDecimal),
+    class: readString(data.class),
+    figi: optional(data.figi, readString),
+    isin: optional(data.isin, readString),
+    listings: ((value: unknown) =>
+      readArray(value).map((item) => decodeSecurityListing(item)))(
+      data.listings,
+    ),
+    primary: optional(data.primary, readBool),
+    title: optional(data.title, readString),
+    type: readString(data.type),
+  };
+}
+export function decodeCompanyWithListings(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CompanyWithListings {
+  const data = readObject(value);
+  return withMeta(
+    {
+      country: optional(data.country, readString),
+      delisted: optional(data.delisted, readBool),
+      fiscal_year_end: optional(data.fiscal_year_end, readString),
+      id: readString(data.id),
+      industry: optional(data.industry, decodeCompanyIndustry),
+      jp_corporate_number: optional(data.jp_corporate_number, readString),
+      lei: optional(data.lei, readString),
+      listings: optional(data.listings, (value: unknown) =>
+        readArray(value).map((item) => readString(item)),
+      ),
+      name: readString(data.name),
+      names: ((value: unknown) =>
+        readArray(value).map((item) => decodeCompanyNameSpan(item)))(
+        data.names,
+      ),
+      related: ((value: unknown) =>
+        readArray(value).map((item) => decodeCompanyRelation(item)))(
+        data.related,
+      ),
+      securities: ((value: unknown) =>
+        readArray(value).map((item) => decodeCompanySecurity(item)))(
+        data.securities,
+      ),
+      standard: optional(data.standard, readString),
+      standard_variant: optional(data.standard_variant, readString),
+      status_date: optional(data.status_date, readString),
+    },
+    meta,
+  );
+}
+export function decodeCostBenchmark(value: unknown): models.CostBenchmark {
+  const data = readObject(value);
+  return {
+    default: optional(data.default, readBool),
+    id: readString(data.id),
+  };
+}
+export function decodeCostBeta(value: unknown): models.CostBeta {
+  const data = readObject(value);
+  return {
+    adjusted: readDecimal(data.adjusted),
+    benchmark: decodeCostBenchmark(data.benchmark),
+    end: readString(data.end),
+    frequency: readString(data.frequency),
+    observations: readInt(data.observations),
+    r_squared: readDecimal(data.r_squared),
+    raw: readDecimal(data.raw),
+    start: readString(data.start),
+    std_error: readDecimal(data.std_error),
+    used: readString(data.used),
+    window: readString(data.window),
+  };
+}
+export function decodeCostEquityRiskPremium(
+  value: unknown,
+): models.CostEquityRiskPremium {
+  const data = readObject(value);
+  return {
+    as_of: optional(data.as_of, readString),
+    basis: optional(data.basis, readString),
+    country: optional(data.country, readString),
+    rate: readDecimal(data.rate),
+    source: readString(data.source),
+  };
+}
+export function decodeCostOfDebt(value: unknown): models.CostOfDebt {
+  const data = readObject(value);
+  return {
+    after_tax: optional(data.after_tax, readDecimal),
+    average_debt: readDecimal(data.average_debt),
+    basis: readString(data.basis),
+    closing_debt: readDecimal(data.closing_debt),
+    default_spread: optional(data.default_spread, readDecimal),
+    interest_coverage: optional(data.interest_coverage, readDecimal),
+    interest_expense: readDecimal(data.interest_expense),
+    opening_debt: optional(data.opening_debt, readDecimal),
+    period: readString(data.period),
+    period_end: readString(data.period_end),
+    pre_tax: readDecimal(data.pre_tax),
+    table: optional(data.table, readString),
+    table_update: optional(data.table_update, readString),
+    table_url: optional(data.table_url, readString),
+  };
+}
+export function decodeCostRiskFree(value: unknown): models.CostRiskFree {
+  const data = readObject(value);
+  return {
+    as_of: optional(data.as_of, readString),
+    basis: readString(data.basis),
+    country: optional(data.country, readString),
+    curve_type: optional(data.curve_type, readString),
+    maturity: optional(data.maturity, readString),
+    rate: readDecimal(data.rate),
+    source: readString(data.source),
+  };
+}
+export function decodeCostTaxRate(value: unknown): models.CostTaxRate {
+  const data = readObject(value);
+  return {
+    basis: readString(data.basis),
+    country: optional(data.country, readString),
+    rate: readDecimal(data.rate),
+    source: readString(data.source),
+    table: optional(data.table, readString),
+    table_update: optional(data.table_update, readString),
+    table_url: optional(data.table_url, readString),
+  };
+}
+export function decodeCostWarning(value: unknown): models.CostWarning {
+  const data = readObject(value);
+  return {
+    code: readString(data.code),
+    message: readString(data.message),
+  };
+}
+export function decodeCostWeights(value: unknown): models.CostWeights {
+  const data = readObject(value);
+  return {
+    debt: readDecimal(data.debt),
+    equity: readDecimal(data.equity),
+    market_cap: readDecimal(data.market_cap),
+    market_cap_as_of: readString(data.market_cap_as_of),
+    total_debt: readDecimal(data.total_debt),
+    total_debt_as_of: readString(data.total_debt_as_of),
+  };
+}
 export function decodeCpi(value: unknown, meta: ResponseMeta = {}): models.Cpi {
   const data = readObject(value);
   return withMeta(
@@ -261,9 +684,105 @@ export function decodeCpiHistoryObservation(
 ): models.CpiHistoryObservation {
   const data = readObject(value);
   return {
+    first_reported_at: optional(data.first_reported_at, readString),
     period: readString(data.period),
     value: readDecimal(data.value),
   };
+}
+export function decodeCryptoBar(value: unknown): models.CryptoBar {
+  const data = readObject(value);
+  return {
+    close: readDecimal(data.close),
+    high: readDecimal(data.high),
+    low: readDecimal(data.low),
+    open: readDecimal(data.open),
+    timestamp: readString(data.timestamp),
+  };
+}
+export function decodeCryptoBars(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CryptoBars {
+  const data = readObject(value);
+  return withMeta(
+    {
+      bars: ((value: unknown) =>
+        readArray(value).map((item) => decodeCryptoBar(item)))(data.bars),
+      end: optional(data.end, readString),
+      next_cursor: optional(data.next_cursor, readCursor),
+      pair: readString(data.pair),
+      start: optional(data.start, readString),
+    },
+    meta,
+  );
+}
+export function decodeCryptoPair(value: unknown): models.CryptoPair {
+  const data = readObject(value);
+  return {
+    base: readString(data.base),
+    name: readString(data.name),
+    pair: readString(data.pair),
+    quote: readString(data.quote),
+  };
+}
+export function decodeCryptoPairs(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CryptoPairs {
+  const data = readObject(value);
+  return withMeta(
+    {
+      pairs: ((value: unknown) =>
+        readArray(value).map((item) => decodeCryptoPair(item)))(data.pairs),
+    },
+    meta,
+  );
+}
+export function decodeCryptoPrice(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CryptoPrice {
+  const data = readObject(value);
+  return withMeta(
+    {
+      base: readString(data.base),
+      change_24h: optional(data.change_24h, readDecimal),
+      change_24h_percent: optional(data.change_24h_percent, readDecimal),
+      delayed: optional(data.delayed, readBool),
+      pair: readString(data.pair),
+      price: readDecimal(data.price),
+      quote: readString(data.quote),
+      stale: readBool(data.stale),
+      timestamp: readString(data.timestamp),
+    },
+    meta,
+  );
+}
+export function decodeCryptoPriceError(
+  value: unknown,
+): models.CryptoPriceError {
+  const data = readObject(value);
+  return {
+    code: readString(data.code),
+    id: readString(data.id),
+  };
+}
+export function decodeCryptoPrices(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.CryptoPrices {
+  const data = readObject(value);
+  return withMeta(
+    {
+      errors: ((value: unknown) =>
+        readArray(value).map((item) => decodeCryptoPriceError(item)))(
+        data.errors,
+      ),
+      prices: ((value: unknown) =>
+        readArray(value).map((item) => decodeCryptoPrice(item)))(data.prices),
+    },
+    meta,
+  );
 }
 export function decodeDeliveryEvent(value: unknown): models.DeliveryEvent {
   const data = readObject(value);
@@ -279,6 +798,35 @@ export function decodeDeliveryEvent(value: unknown): models.DeliveryEvent {
     resource_id: optional(data.resource_id, readString),
     resource_version: optional(data.resource_version, readString),
     type: readString(data.type),
+  };
+}
+export function decodeDividendsCalendar(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.DividendsCalendar {
+  const data = readObject(value);
+  return withMeta(
+    {
+      entries: ((value: unknown) =>
+        readArray(value).map((item) => decodeDividendsCalendarEntry(item)))(
+        data.entries,
+      ),
+      next_cursor: optional(data.next_cursor, readCursor),
+    },
+    meta,
+  );
+}
+export function decodeDividendsCalendarEntry(
+  value: unknown,
+): models.DividendsCalendarEntry {
+  const data = readObject(value);
+  return {
+    amount: readDecimal(data.amount),
+    currency: readString(data.currency),
+    ex_date: readString(data.ex_date),
+    id: readString(data.id),
+    name: readString(data.name),
+    symbol: readString(data.symbol),
   };
 }
 export function decodeEconomicCalendar(
@@ -381,6 +929,406 @@ export function decodeEconomicReleaseValue(
     value_status: optional(data.value_status, readString),
   };
 }
+export function decodeEquityBar(value: unknown): models.EquityBar {
+  const data = readObject(value);
+  return {
+    close: readDecimal(data.close),
+    date: optional(data.date, readString),
+    high: readDecimal(data.high),
+    low: readDecimal(data.low),
+    open: readDecimal(data.open),
+    timestamp: readString(data.timestamp),
+    volume: optional(data.volume, readDecimal),
+  };
+}
+export function decodeEquityBars(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityBars {
+  const data = readObject(value);
+  return withMeta(
+    {
+      adjusted: readBool(data.adjusted),
+      bars: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityBar(item)))(data.bars),
+      currency: readString(data.currency),
+      end: optional(data.end, readString),
+      id: readString(data.id),
+      next_cursor: optional(data.next_cursor, readCursor),
+      start: optional(data.start, readString),
+    },
+    meta,
+  );
+}
+export function decodeEquityCostOfCapital(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityCostOfCapital {
+  const data = readObject(value);
+  return withMeta(
+    {
+      beta: decodeCostBeta(data.beta),
+      company_id: readString(data.company_id),
+      cost_of_debt: optional(data.cost_of_debt, decodeCostOfDebt),
+      cost_of_equity: readDecimal(data.cost_of_equity),
+      currency: readString(data.currency),
+      equity_risk_premium: decodeCostEquityRiskPremium(
+        data.equity_risk_premium,
+      ),
+      id: readString(data.id),
+      methodology_url: readString(data.methodology_url),
+      risk_free: decodeCostRiskFree(data.risk_free),
+      tax_rate: optional(data.tax_rate, decodeCostTaxRate),
+      wacc: optional(data.wacc, readDecimal),
+      warnings: ((value: unknown) =>
+        readArray(value).map((item) => decodeCostWarning(item)))(data.warnings),
+      weights: decodeCostWeights(data.weights),
+    },
+    meta,
+  );
+}
+export function decodeEquityDividend(value: unknown): models.EquityDividend {
+  const data = readObject(value);
+  return {
+    amount: readDecimal(data.amount),
+    currency: readString(data.currency),
+    ex_date: readString(data.ex_date),
+    pay_date: optional(data.pay_date, readString),
+    record_date: optional(data.record_date, readString),
+  };
+}
+export function decodeEquityDividends(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityDividends {
+  const data = readObject(value);
+  return withMeta(
+    {
+      dividends: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityDividend(item)))(
+        data.dividends,
+      ),
+      id: readString(data.id),
+      next_cursor: optional(data.next_cursor, readCursor),
+      start: optional(data.start, readString),
+    },
+    meta,
+  );
+}
+export function decodeEquityEarning(value: unknown): models.EquityEarning {
+  const data = readObject(value);
+  return {
+    date: readString(data.date),
+    eps_actual: optional(data.eps_actual, readDecimal),
+    eps_estimate: optional(data.eps_estimate, readDecimal),
+    filing_id: optional(data.filing_id, readString),
+    surprise: optional(data.surprise, readDecimal),
+    surprise_percent: optional(data.surprise_percent, readDecimal),
+    time: optional(data.time, readString),
+  };
+}
+export function decodeEquityEarnings(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityEarnings {
+  const data = readObject(value);
+  return withMeta(
+    {
+      earnings: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityEarning(item)))(
+        data.earnings,
+      ),
+      id: readString(data.id),
+      next_cursor: optional(data.next_cursor, readCursor),
+      start: optional(data.start, readString),
+    },
+    meta,
+  );
+}
+export function decodeEquityMover(value: unknown): models.EquityMover {
+  const data = readObject(value);
+  return {
+    change_percent: readDecimal(data.change_percent),
+    id: readString(data.id),
+    name: readString(data.name),
+    price: readDecimal(data.price),
+    symbol: readString(data.symbol),
+    volume: readDecimal(data.volume),
+  };
+}
+export function decodeEquityMovers(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityMovers {
+  const data = readObject(value);
+  return withMeta(
+    {
+      direction: readString(data.direction),
+      market: readString(data.market),
+      movers: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityMover(item)))(data.movers),
+      timestamp: readString(data.timestamp),
+    },
+    meta,
+  );
+}
+export function decodeEquityPrice(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityPrice {
+  const data = readObject(value);
+  return withMeta(
+    {
+      change: optional(data.change, readDecimal),
+      change_percent: optional(data.change_percent, readDecimal),
+      currency: readString(data.currency),
+      delayed: optional(data.delayed, readBool),
+      id: readString(data.id),
+      market_session: readString(data.market_session),
+      previous_close: optional(data.previous_close, readDecimal),
+      price: readDecimal(data.price),
+      stale: readBool(data.stale),
+      symbol: readString(data.symbol),
+      timestamp: readString(data.timestamp),
+      volume: optional(data.volume, readDecimal),
+    },
+    meta,
+  );
+}
+export function decodeEquityPriceError(
+  value: unknown,
+): models.EquityPriceError {
+  const data = readObject(value);
+  return {
+    code: readString(data.code),
+    id: readString(data.id),
+  };
+}
+export function decodeEquityPrices(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityPrices {
+  const data = readObject(value);
+  return withMeta(
+    {
+      errors: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityPriceError(item)))(
+        data.errors,
+      ),
+      prices: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityPrice(item)))(data.prices),
+    },
+    meta,
+  );
+}
+export function decodeEquityProfile(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityProfile {
+  const data = readObject(value);
+  return withMeta(
+    {
+      company_id: optional(data.company_id, readString),
+      country: optional(data.country, readString),
+      currency: readString(data.currency),
+      id: readString(data.id),
+      industry: optional(data.industry, readString),
+      logo_url: optional(data.logo_url, readString),
+      mic: readString(data.mic),
+      name: readString(data.name),
+      sector: optional(data.sector, readString),
+      symbol: readString(data.symbol),
+      type: readString(data.type),
+      website: optional(data.website, readString),
+    },
+    meta,
+  );
+}
+export function decodeEquityRiskPremium(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityRiskPremium {
+  const data = readObject(value);
+  return withMeta(
+    {
+      as_of: readString(data.as_of),
+      basis: decodeEquityRiskPremiumBasis(data.basis),
+      country: readString(data.country),
+      country_default_spread: readDecimal(data.country_default_spread),
+      country_risk_premium: readDecimal(data.country_risk_premium),
+      mature_erp: readDecimal(data.mature_erp),
+      methodology_url: optional(data.methodology_url, readString),
+      total_erp: readDecimal(data.total_erp),
+      unit: readString(data.unit),
+      volatility_ratio: optional(data.volatility_ratio, readDecimal),
+    },
+    meta,
+  );
+}
+export function decodeEquityRiskPremiumBasis(
+  value: unknown,
+): models.EquityRiskPremiumBasis {
+  const data = readObject(value);
+  return {
+    country_default_spread: readString(data.country_default_spread),
+    country_risk_premium: readString(data.country_risk_premium),
+    mature_erp: readString(data.mature_erp),
+    total_erp: readString(data.total_erp),
+    volatility_ratio: readString(data.volatility_ratio),
+  };
+}
+export function decodeEquityRiskPremiumHistoryResponse(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityRiskPremiumHistoryResponse {
+  const data = readObject(value);
+  return withMeta(
+    {
+      country: readString(data.country),
+      next_cursor: optional(data.next_cursor, readCursor),
+      observations: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityRiskPremium(item)))(
+        data.observations,
+      ),
+    },
+    meta,
+  );
+}
+export function decodeEquityRiskPremiumList(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityRiskPremiumList {
+  const data = readObject(value);
+  return withMeta(
+    {
+      countries: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityRiskPremium(item)))(
+        data.countries,
+      ),
+    },
+    meta,
+  );
+}
+export function decodeEquitySearchResult(
+  value: unknown,
+): models.EquitySearchResult {
+  const data = readObject(value);
+  return {
+    company_id: optional(data.company_id, readString),
+    country: optional(data.country, readString),
+    currency: readString(data.currency),
+    id: readString(data.id),
+    mic: readString(data.mic),
+    name: readString(data.name),
+    symbol: readString(data.symbol),
+    type: readString(data.type),
+  };
+}
+export function decodeEquitySearchResults(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquitySearchResults {
+  const data = readObject(value);
+  return withMeta(
+    {
+      next_cursor: optional(data.next_cursor, readCursor),
+      results: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquitySearchResult(item)))(
+        data.results,
+      ),
+    },
+    meta,
+  );
+}
+export function decodeEquitySplit(value: unknown): models.EquitySplit {
+  const data = readObject(value);
+  return {
+    date: readString(data.date),
+    ratio: readString(data.ratio),
+  };
+}
+export function decodeEquitySplits(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquitySplits {
+  const data = readObject(value);
+  return withMeta(
+    {
+      id: readString(data.id),
+      splits: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquitySplit(item)))(data.splits),
+      start: optional(data.start, readString),
+    },
+    meta,
+  );
+}
+export function decodeEquityValuation(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityValuation {
+  const data = readObject(value);
+  return withMeta(
+    {
+      company_id: readString(data.company_id),
+      currency: readString(data.currency),
+      dividend_per_share_ttm: optional(
+        data.dividend_per_share_ttm,
+        readDecimal,
+      ),
+      dividend_yield: optional(data.dividend_yield, readDecimal),
+      dividends_period_end: optional(data.dividends_period_end, readString),
+      eps_period_end: optional(data.eps_period_end, readString),
+      eps_ttm: optional(data.eps_ttm, readDecimal),
+      equity_as_of: optional(data.equity_as_of, readString),
+      id: readString(data.id),
+      market_cap: optional(data.market_cap, readDecimal),
+      pb_ratio: optional(data.pb_ratio, readDecimal),
+      pe_ratio: optional(data.pe_ratio, readDecimal),
+      ps_ratio: optional(data.ps_ratio, readDecimal),
+      revenue_period_end: optional(data.revenue_period_end, readString),
+      revenue_ttm: optional(data.revenue_ttm, readDecimal),
+      shares_as_of: optional(data.shares_as_of, readString),
+      shares_outstanding: optional(data.shares_outstanding, readDecimal),
+      timestamp: readString(data.timestamp),
+      total_equity: optional(data.total_equity, readDecimal),
+    },
+    meta,
+  );
+}
+export function decodeEquityValuationHistory(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.EquityValuationHistory {
+  const data = readObject(value);
+  return withMeta(
+    {
+      company_id: readString(data.company_id),
+      currency: readString(data.currency),
+      id: readString(data.id),
+      points: ((value: unknown) =>
+        readArray(value).map((item) => decodeEquityValuationPoint(item)))(
+        data.points,
+      ),
+      start: optional(data.start, readString),
+    },
+    meta,
+  );
+}
+export function decodeEquityValuationPoint(
+  value: unknown,
+): models.EquityValuationPoint {
+  const data = readObject(value);
+  return {
+    date: readString(data.date),
+    dividend_yield: optional(data.dividend_yield, readDecimal),
+    market_cap: optional(data.market_cap, readDecimal),
+    pb_ratio: optional(data.pb_ratio, readDecimal),
+    pe_ratio: optional(data.pe_ratio, readDecimal),
+    price: optional(data.price, readDecimal),
+    price_date: optional(data.price_date, readString),
+    ps_ratio: optional(data.ps_ratio, readDecimal),
+  };
+}
 export function decodeEventDetail(
   value: unknown,
   meta: ResponseMeta = {},
@@ -469,13 +1417,249 @@ export function decodeExtremeWindow(value: unknown): models.ExtremeWindow {
     start: readString(data.start),
   };
 }
+export function decodeFiling(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.Filing {
+  const data = readObject(value);
+  return withMeta(
+    {
+      amends: optional(data.amends, readString),
+      company_id: readString(data.company_id),
+      filed_at: readString(data.filed_at),
+      filer_id: optional(data.filer_id, readString),
+      form: readString(data.form),
+      fp: optional(data.fp, readString),
+      fy: optional(data.fy, readInt),
+      id: readString(data.id),
+      period_end: optional(data.period_end, readString),
+      title: optional(data.title, readString),
+      type: readString(data.type),
+      url: optional(data.url, readString),
+      withdrawn: optional(data.withdrawn, readBool),
+    },
+    meta,
+  );
+}
+export function decodeFilingWebhookEvent(
+  value: unknown,
+): models.FilingWebhookEvent {
+  const data = readObject(value);
+  return {
+    company_id: readString(data.company_id),
+    filed_at: readString(data.filed_at),
+    filing_id: readString(data.filing_id),
+    form: readString(data.form),
+    fp: optional(data.fp, readString),
+    fy: optional(data.fy, readInt),
+    period_end: optional(data.period_end, readString),
+    subject_id: optional(data.subject_id, readString),
+    type: readString(data.type),
+  };
+}
+export function decodeFinancialRow(value: unknown): models.FinancialRow {
+  const data = readObject(value);
+  return {
+    currency: optional(data.currency, readString),
+    derived: optional(data.derived, (value: unknown) =>
+      readArray(value).map((item) => readString(item)),
+    ),
+    end: readString(data.end),
+    fh: optional(data.fh, readInt),
+    fq: optional(data.fq, readInt),
+    fy: readInt(data.fy),
+    items: readDecimalItems(data, [
+      "currency",
+      "derived",
+      "end",
+      "fh",
+      "fq",
+      "fy",
+    ]),
+  };
+}
+export function decodeFinancials(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.Financials {
+  const data = readObject(value);
+  return withMeta(
+    {
+      annual: optional(data.annual, (value: unknown) =>
+        readArray(value).map((item) => decodeFinancialRow(item)),
+      ),
+      as_of: optional(data.as_of, readString),
+      basis: optional(data.basis, readString),
+      currency: optional(data.currency, readString),
+      from_fy: optional(data.from_fy, readInt),
+      id: readString(data.id),
+      quarterly: optional(data.quarterly, (value: unknown) =>
+        readArray(value).map((item) => decodeFinancialRow(item)),
+      ),
+      semiannual: optional(data.semiannual, (value: unknown) =>
+        readArray(value).map((item) => decodeFinancialRow(item)),
+      ),
+    },
+    meta,
+  );
+}
+export function decodeFundDistribution(
+  value: unknown,
+): models.FundDistribution {
+  const data = readObject(value);
+  return {
+    amount: readDecimal(data.amount),
+    currency: readString(data.currency),
+    ex_date: readString(data.ex_date),
+    kind: optional(data.kind, readString),
+    pay_date: optional(data.pay_date, readString),
+    record_date: optional(data.record_date, readString),
+  };
+}
+export function decodeFundDistributions(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.FundDistributions {
+  const data = readObject(value);
+  return withMeta(
+    {
+      distributions: ((value: unknown) =>
+        readArray(value).map((item) => decodeFundDistribution(item)))(
+        data.distributions,
+      ),
+      id: readString(data.id),
+      next_cursor: optional(data.next_cursor, readCursor),
+      start: optional(data.start, readString),
+    },
+    meta,
+  );
+}
+export function decodeFundEtfPrice(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.FundEtfPrice {
+  const data = readObject(value);
+  return withMeta(
+    {
+      kind: "FundEtfPrice" as const,
+      change: optional(data.change, readDecimal),
+      change_percent: optional(data.change_percent, readDecimal),
+      currency: readString(data.currency),
+      delayed: optional(data.delayed, readBool),
+      id: readString(data.id),
+      market_session: readString(data.market_session),
+      previous_close: optional(data.previous_close, readDecimal),
+      price: readDecimal(data.price),
+      stale: readBool(data.stale),
+      symbol: readString(data.symbol),
+      timestamp: readString(data.timestamp),
+      type: readString(data.type),
+      volume: optional(data.volume, readDecimal),
+    },
+    meta,
+  );
+}
+export function decodeFundNavPrice(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.FundNavPrice {
+  const data = readObject(value);
+  return withMeta(
+    {
+      kind: "FundNavPrice" as const,
+      change: optional(data.change, readDecimal),
+      change_percent: optional(data.change_percent, readDecimal),
+      currency: readString(data.currency),
+      date: readString(data.date),
+      id: readString(data.id),
+      nav: readDecimal(data.nav),
+      previous_nav: optional(data.previous_nav, readDecimal),
+      stale: readBool(data.stale),
+      symbol: readString(data.symbol),
+      type: readString(data.type),
+    },
+    meta,
+  );
+}
+export function decodeFundPriceError(value: unknown): models.FundPriceError {
+  const data = readObject(value);
+  return {
+    code: readString(data.code),
+    id: readString(data.id),
+  };
+}
+export function decodeFundPrices(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.FundPrices {
+  const data = readObject(value);
+  return withMeta(
+    {
+      errors: ((value: unknown) =>
+        readArray(value).map((item) => decodeFundPriceError(item)))(
+        data.errors,
+      ),
+      prices: ((value: unknown) =>
+        readArray(value).map((item) => decodeFundPriceItem(item)))(data.prices),
+    },
+    meta,
+  );
+}
+export function decodeFundProfile(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.FundProfile {
+  const data = readObject(value);
+  return withMeta(
+    {
+      country: optional(data.country, readString),
+      currency: readString(data.currency),
+      id: readString(data.id),
+      mic: optional(data.mic, readString),
+      name: readString(data.name),
+      symbol: readString(data.symbol),
+      type: readString(data.type),
+    },
+    meta,
+  );
+}
+export function decodeFundSearchResult(
+  value: unknown,
+): models.FundSearchResult {
+  const data = readObject(value);
+  return {
+    country: optional(data.country, readString),
+    currency: readString(data.currency),
+    id: readString(data.id),
+    mic: optional(data.mic, readString),
+    name: readString(data.name),
+    symbol: readString(data.symbol),
+    type: readString(data.type),
+  };
+}
+export function decodeFundSearchResults(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.FundSearchResults {
+  const data = readObject(value);
+  return withMeta(
+    {
+      next_cursor: optional(data.next_cursor, readCursor),
+      results: ((value: unknown) =>
+        readArray(value).map((item) => decodeFundSearchResult(item)))(
+        data.results,
+      ),
+    },
+    meta,
+  );
+}
 export function decodeFxBar(value: unknown): models.FxBar {
   const data = readObject(value);
   return {
-    close: readString(data.close),
-    high: readString(data.high),
-    low: readString(data.low),
-    open: readString(data.open),
+    close: readDecimal(data.close),
+    high: readDecimal(data.high),
+    low: readDecimal(data.low),
+    open: readDecimal(data.open),
     timestamp: readString(data.timestamp),
   };
 }
@@ -656,6 +1840,7 @@ export function decodeGdpGrowthHistoryObservation(
 ): models.GdpGrowthHistoryObservation {
   const data = readObject(value);
   return {
+    first_reported_at: optional(data.first_reported_at, readString),
     period: readString(data.period),
     quarter_over_quarter: optional(data.quarter_over_quarter, readDecimal),
     year_over_year: optional(data.year_over_year, readDecimal),
@@ -690,9 +1875,44 @@ export function decodeGdpHistoryObservation(
 ): models.GdpHistoryObservation {
   const data = readObject(value);
   return {
+    first_reported_at: optional(data.first_reported_at, readString),
     period: readString(data.period),
     value: readDecimal(data.value),
   };
+}
+export function decodeHolder(value: unknown): models.Holder {
+  const data = readObject(value);
+  return {
+    event_date: optional(data.event_date, readString),
+    filed: readString(data.filed),
+    filing_id: readString(data.filing_id),
+    holder: readString(data.holder),
+    percent: optional(data.percent, readDecimal),
+    security: optional(data.security, decodeHolderSecurity),
+    shares: optional(data.shares, readDecimal),
+  };
+}
+export function decodeHolderSecurity(value: unknown): models.HolderSecurity {
+  const data = readObject(value);
+  return {
+    class: optional(data.class, readString),
+    isin: optional(data.isin, readString),
+  };
+}
+export function decodeHoldersPage(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.HoldersPage {
+  const data = readObject(value);
+  return withMeta(
+    {
+      filed_from: optional(data.filed_from, readString),
+      holders: ((value: unknown) =>
+        readArray(value).map((item) => decodeHolder(item)))(data.holders),
+      id: readString(data.id),
+    },
+    meta,
+  );
 }
 export function decodeInflation(
   value: unknown,
@@ -737,6 +1957,7 @@ export function decodeInflationHistoryObservation(
 ): models.InflationHistoryObservation {
   const data = readObject(value);
   return {
+    first_reported_at: optional(data.first_reported_at, readString),
     month_over_month: optional(data.month_over_month, readDecimal),
     period: readString(data.period),
     year_over_year: optional(data.year_over_year, readDecimal),
@@ -758,6 +1979,41 @@ export function decodeLabourForceParticipation(
     },
     meta,
   );
+}
+export function decodeLatestFiling(value: unknown): models.LatestFiling {
+  const data = readObject(value);
+  return {
+    company_id: readString(data.company_id),
+    filed: readString(data.filed),
+    form: readString(data.form),
+    id: readString(data.id),
+    title: optional(data.title, readString),
+    type: readString(data.type),
+  };
+}
+export function decodeLatestFilingsPage(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.LatestFilingsPage {
+  const data = readObject(value);
+  return withMeta(
+    {
+      filings: ((value: unknown) =>
+        readArray(value).map((item) => decodeLatestFiling(item)))(data.filings),
+    },
+    meta,
+  );
+}
+export function decodeListedFiling(value: unknown): models.ListedFiling {
+  const data = readObject(value);
+  return {
+    filed: readString(data.filed),
+    form: readString(data.form),
+    id: readString(data.id),
+    period_end: optional(data.period_end, readString),
+    title: optional(data.title, readString),
+    type: readString(data.type),
+  };
 }
 export function decodeNoContent(
   value: unknown,
@@ -1130,6 +2386,29 @@ export function decodePhysicalSeriesPage(
     meta,
   );
 }
+export function decodePointPolicyRate(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.PointPolicyRate {
+  const data = readObject(value);
+  return withMeta(
+    {
+      kind: "PointPolicyRate" as const,
+      announced_on: optional(data.announced_on, readString),
+      authority: readString(data.authority),
+      country: readString(data.country),
+      currency: readString(data.currency),
+      effective_on: optional(data.effective_on, readString),
+      instrument: readString(data.instrument),
+      observed_on: optional(data.observed_on, readString),
+      qualifier: readString(data.qualifier),
+      rate: readDecimal(data.rate),
+      rate_type: readString(data.rate_type),
+      unit: readString(data.unit),
+    },
+    meta,
+  );
+}
 export function decodePolicyPath(
   value: unknown,
   meta: ResponseMeta = {},
@@ -1206,6 +2485,23 @@ export function decodePolicyPathOdds(value: unknown): models.PolicyPathOdds {
     p_hike: readString(data.p_hike),
     p_hold: readString(data.p_hold),
   };
+}
+export function decodePolicyRateHistoryResponse(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.PolicyRateHistoryResponse {
+  const data = readObject(value);
+  return withMeta(
+    {
+      country: readString(data.country),
+      next_cursor: optional(data.next_cursor, readCursor),
+      observations: ((value: unknown) =>
+        readArray(value).map((item) => decodePolicyRateObservation(item)))(
+        data.observations,
+      ),
+    },
+    meta,
+  );
 }
 export function decodePredictionBar(value: unknown): models.PredictionBar {
   const data = readObject(value);
@@ -1460,6 +2756,29 @@ export function decodeQuote(value: unknown): models.Quote {
     venue: readString(data.venue),
   };
 }
+export function decodeRangePolicyRate(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.RangePolicyRate {
+  const data = readObject(value);
+  return withMeta(
+    {
+      kind: "RangePolicyRate" as const,
+      announced_on: optional(data.announced_on, readString),
+      authority: readString(data.authority),
+      country: readString(data.country),
+      currency: readString(data.currency),
+      effective_on: optional(data.effective_on, readString),
+      instrument: readString(data.instrument),
+      lower_bound: readDecimal(data.lower_bound),
+      observed_on: optional(data.observed_on, readString),
+      rate_type: readString(data.rate_type),
+      unit: readString(data.unit),
+      upper_bound: readDecimal(data.upper_bound),
+    },
+    meta,
+  );
+}
 export function decodeRateHistory(
   value: unknown,
   meta: ResponseMeta = {},
@@ -1485,8 +2804,18 @@ export function decodeRateHistoryObservation(
 ): models.RateHistoryObservation {
   const data = readObject(value);
   return {
+    first_reported_at: optional(data.first_reported_at, readString),
     period: readString(data.period),
     rate: readDecimal(data.rate),
+  };
+}
+export function decodeRegistryCoverage(
+  value: unknown,
+): models.RegistryCoverage {
+  const data = readObject(value);
+  return {
+    companies: readInt(data.companies),
+    registry: readString(data.registry),
   };
 }
 export function decodeResourceHistory(
@@ -1496,6 +2825,7 @@ export function decodeResourceHistory(
   const data = readObject(value);
   return withMeta(
     {
+      as_of: optional(data.as_of, readString),
       country: readString(data.country),
       currency: optional(data.currency, readString),
       next_cursor: optional(data.next_cursor, readCursor),
@@ -1515,6 +2845,7 @@ export function decodeResourceObservation(
 ): models.ResourceObservation {
   const data = readObject(value);
   return {
+    first_reported_at: optional(data.first_reported_at, readString),
     period: readString(data.period),
     released_on: optional(data.released_on, readString),
     status: optional(data.status, readString),
@@ -1570,11 +2901,48 @@ export function decodeScalarOutcome(value: unknown): models.ScalarOutcome {
     upper: optional(data.upper, readDecimal),
   };
 }
+export function decodeSecurityListing(value: unknown): models.SecurityListing {
+  const data = readObject(value);
+  return {
+    code: readString(data.code),
+    from: optional(data.from, readString),
+    mic: readString(data.mic),
+    to: optional(data.to, readString),
+  };
+}
 export function decodeSeriesSource(value: unknown): models.SeriesSource {
   const data = readObject(value);
   return {
     distributor: readString(data.distributor),
     publisher: readString(data.publisher),
+  };
+}
+export function decodeSplitsCalendar(
+  value: unknown,
+  meta: ResponseMeta = {},
+): models.SplitsCalendar {
+  const data = readObject(value);
+  return withMeta(
+    {
+      entries: ((value: unknown) =>
+        readArray(value).map((item) => decodeSplitsCalendarEntry(item)))(
+        data.entries,
+      ),
+      next_cursor: optional(data.next_cursor, readCursor),
+    },
+    meta,
+  );
+}
+export function decodeSplitsCalendarEntry(
+  value: unknown,
+): models.SplitsCalendarEntry {
+  const data = readObject(value);
+  return {
+    date: readString(data.date),
+    id: readString(data.id),
+    name: readString(data.name),
+    ratio: readString(data.ratio),
+    symbol: readString(data.symbol),
   };
 }
 export function decodeTimingEvent(
@@ -1654,6 +3022,7 @@ export function decodeTradeHistoryObservation(
   const data = readObject(value);
   return {
     exports: optional(data.exports, readDecimal),
+    first_reported_at: optional(data.first_reported_at, readString),
     imports: optional(data.imports, readDecimal),
     period: readString(data.period),
   };
@@ -1757,6 +3126,9 @@ export function decodeWebhookDestinationCreated(
   const data = readObject(value);
   return withMeta(
     {
+      companies: optional(data.companies, (value: unknown) =>
+        readArray(value).map((item) => readString(item)),
+      ),
       config_version: readInt(data.config_version),
       countries: ((value: unknown) =>
         readArray(value).map((item) => readString(item)))(data.countries),
@@ -1779,6 +3151,9 @@ export function decodeWebhookDestinationInput(
 ): models.WebhookDestinationInput {
   const data = readObject(value);
   return {
+    companies: optional(data.companies, (value: unknown) =>
+      readArray(value).map((item) => readString(item)),
+    ),
     countries: ((value: unknown) =>
       readArray(value).map((item) => readString(item)))(data.countries),
     enabled: optional(data.enabled, readBool),
@@ -1810,6 +3185,9 @@ export function decodeWebhookDestinationResponse(
   const data = readObject(value);
   return withMeta(
     {
+      companies: optional(data.companies, (value: unknown) =>
+        readArray(value).map((item) => readString(item)),
+      ),
       config_version: readInt(data.config_version),
       countries: ((value: unknown) =>
         readArray(value).map((item) => readString(item)))(data.countries),
@@ -1833,6 +3211,7 @@ export function decodeWebhookEvent(value: unknown): models.WebhookEvent {
     cursor: optional(data.cursor, readString),
     event_id: readString(data.event_id),
     family: optional(data.family, readString),
+    filing: optional(data.filing, decodeFilingWebhookEvent),
     holiday_generation: optional(data.holiday_generation, readInt),
     holiday_year: optional(data.holiday_year, readInt),
     prediction: optional(data.prediction, decodePredictionWebhookEvent),
@@ -1924,6 +3303,26 @@ export function decodeYieldPoint(value: unknown): models.YieldPoint {
     yield_percent: readDecimal(data.yield_percent),
   };
 }
+export function decodeFundPrice(
+  value: unknown,
+  meta: ResponseMeta = {},
+  rawBody: Uint8Array = new Uint8Array(),
+): models.FundPrice {
+  const data = readObject(value);
+  if (data.type === "etf") return decodeFundEtfPrice(data, meta);
+  if (data.type === "mutual_fund") return decodeFundNavPrice(data, meta);
+  return withMeta(unknownValue(data, rawBody), meta);
+}
+export function decodeFundPriceItem(
+  value: unknown,
+  meta: ResponseMeta = {},
+  rawBody: Uint8Array = new Uint8Array(),
+): models.FundPriceItem {
+  const data = readObject(value);
+  if (data.type === "etf") return decodeFundEtfPrice(data, meta);
+  if (data.type === "mutual_fund") return decodeFundNavPrice(data, meta);
+  return unknownValue(data, rawBody);
+}
 export function decodePalmoilHistory(
   value: unknown,
   meta: ResponseMeta = {},
@@ -1981,5 +3380,25 @@ export function decodePalmoilSeries(
     return decodePalmoilScheduleSeries(data);
   if (data.observation_type === "scalar")
     return decodePalmoilScalarSeries(data);
+  return unknownValue(data, rawBody);
+}
+export function decodePolicyRate(
+  value: unknown,
+  meta: ResponseMeta = {},
+  rawBody: Uint8Array = new Uint8Array(),
+): models.PolicyRate {
+  const data = readObject(value);
+  if (data.rate_type === "point") return decodePointPolicyRate(data, meta);
+  if (data.rate_type === "range") return decodeRangePolicyRate(data, meta);
+  return withMeta(unknownValue(data, rawBody), meta);
+}
+export function decodePolicyRateObservation(
+  value: unknown,
+  meta: ResponseMeta = {},
+  rawBody: Uint8Array = new Uint8Array(),
+): models.PolicyRateObservation {
+  const data = readObject(value);
+  if (data.rate_type === "point") return decodePointPolicyRate(data, meta);
+  if (data.rate_type === "range") return decodeRangePolicyRate(data, meta);
   return unknownValue(data, rawBody);
 }
